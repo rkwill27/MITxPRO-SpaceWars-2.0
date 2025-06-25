@@ -193,6 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
@@ -209,6 +210,7 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1001 &5281312415084593943
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -310,6 +312,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2309360027347361939, guid: ca2c11bd02080ac449fced587a09ae2c, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 2309360027347361939, guid: ca2c11bd02080ac449fced587a09ae2c, type: 3}
+      propertyPath: m_Color.r
+      value: 0.0070452103
+      objectReference: {fileID: 0}
     - target: {fileID: 2932330574319167231, guid: ca2c11bd02080ac449fced587a09ae2c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.46
@@ -408,7 +418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7627786619979391879, guid: ca2c11bd02080ac449fced587a09ae2c, type: 3}
       propertyPath: m_NormalizedViewPortRect.x
-      value: 0.06644395
+      value: 0.053814918
       objectReference: {fileID: 0}
     - target: {fileID: 7627786619979391879, guid: ca2c11bd02080ac449fced587a09ae2c, type: 3}
       propertyPath: m_NormalizedViewPortRect.y
@@ -416,7 +426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7627786619979391879, guid: ca2c11bd02080ac449fced587a09ae2c, type: 3}
       propertyPath: m_NormalizedViewPortRect.width
-      value: 0.8671121
+      value: 0.89237016
       objectReference: {fileID: 0}
     - target: {fileID: 7627786619979391879, guid: ca2c11bd02080ac449fced587a09ae2c, type: 3}
       propertyPath: m_NormalizedViewPortRect.height
