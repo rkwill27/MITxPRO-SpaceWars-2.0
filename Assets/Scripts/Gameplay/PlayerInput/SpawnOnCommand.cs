@@ -11,34 +11,57 @@ namespace Scripts.Gameplay.PlayerInput
         public GameObject prefabSpawnMe;
         public Transform spawnedObjectParent;
         public SpawnInfo spawnInfo = new SpawnInfo();
-        
+
+        public float spawnInterval = 2f; // Seconds between spawns
+        private float spawnTimer;
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            
-            this.myPlayerInput.Player.Fire.Enable();
-            this.myPlayerInput.Player.Fire.performed += this.SpawnPrefab;
+
+            // Commented out input-based spawning
+            // this.myPlayerInput.Player.Fire.Enable();
+            // this.myPlayerInput.Player.Fire.performed += this.SpawnPrefab;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            
-            this.myPlayerInput.Player.Fire.Disable();
-            myPlayerInput.Player.Fire.performed -= this.SpawnPrefab;
+
+            // Commented out input-based unbinding
+            // this.myPlayerInput.Player.Fire.Disable();
+            // myPlayerInput.Player.Fire.performed -= this.SpawnPrefab;
         }
 
+        private void Update()
+        {
+            if (PauseManager.IsPaused || !this.ShouldProcessInput) return;
 
-        private void SpawnPrefab(InputAction.CallbackContext obj)
+            spawnTimer -= Time.deltaTime;
+            if (spawnTimer <= 0f)
+            {
+                SpawnPrefab();
+                spawnTimer = spawnInterval;
+            }
+        }
+
+        // Modified to be parameterless for timer use
+        private void SpawnPrefab()
         {
             if (this.prefabSpawnMe == null) return;
-            if (PauseManager.IsPaused) return;
-            if (!this.ShouldProcessInput) return;
-            if (IsGuiAction(obj)) return;
 
             this.spawnInfo.Spawn(this.transform, this.prefabSpawnMe.transform, this.spawnedObjectParent);
         }
 
+        // Original method left here for reference or reactivation later
+        // private void SpawnPrefab(InputAction.CallbackContext obj)
+        // {
+        //     if (this.prefabSpawnMe == null) return;
+        //     if (PauseManager.IsPaused) return;
+        //     if (!this.ShouldProcessInput) return;
+        //     if (IsGuiAction(obj)) return;
+
+        //     this.spawnInfo.Spawn(this.transform, this.prefabSpawnMe.transform, this.spawnedObjectParent);
+        // }
     }
 }
