@@ -12,12 +12,19 @@ namespace Scripts.Gameplay
         public float sCollisionCooldown = 0.001f;
 
         protected float sLastDamageTime = float.MinValue;
-        
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (this.sLastDamageTime + this.sCollisionCooldown >= Time.time) return;
-            
             if (!GeneralHelpers.IsInMask(this.thingsThatHurtMe, other.gameObject)) return;
+
+            // Look for PlayerInvincibility on the GameObject
+            var invincibility = this.gameObject.GetComponent<PlayerInvincibility>();
+            if (invincibility != null && invincibility.IsInvincible())
+            {
+                // Damage is blocked
+                return;
+            }
 
             var hitPoints = this.gameObject.GetComponent<HitPoints>();
             if (hitPoints)

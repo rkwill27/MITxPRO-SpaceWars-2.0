@@ -14,86 +14,61 @@ public class Movement : MonoBehaviour
     public float moveSpeed;
     private Vector2 moveInput;
 
-    //Dash
+    // Dash
     private float activeMoveSpeed;
-    public float dashSpeed = 8f, dashLength = .5f, dashCooldown = 1f;
-    [HideInInspector] public float dashCounter;
-    private float dashCoolCounter;
+    public float dashSpeed = 8f, dashLength = 0.5f, dashCooldown = 1f;
+    private float dashCounter;
+    private float dashCooldownCounter;
 
-    public bool isInvincible = false;
-
-    public Animator anim;
-
-    //public float pickupRange = 1.5f;
+    private Rigidbody2D theRB;
+    private PlayerInvincibility invincibility;
 
     void Start()
     {
-        activeMoveSpeed = moveSpeed;
+        theRB = GetComponent<Rigidbody2D>();
+        invincibility = GetComponent<PlayerInvincibility>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Vector3 moveInput = new Vector3(0f, 0f, 0f);
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.y = Input.GetAxisRaw("Vertical");
+        // Movement input
+        moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        activeMoveSpeed = moveSpeed;
 
-        //Debug.Log(moveInput);
-
-        moveInput.Normalize();
-
-        transform.position += moveInput * activeMoveSpeed * Time.deltaTime;
-
-        /* if (moveInput != Vector3.zero)
+        // Handle dash input
+        if (Input.GetKeyDown(KeyCode.Space) && dashCooldownCounter <= 0 && dashCounter <= 0)
         {
-            anim.SetBool("isMoving", true);
+            // Start dash
+            dashCounter = dashLength;
+            dashCooldownCounter = dashCooldown;
+
+            // Set invincible via shared manager
+            if (invincibility != null)
+            {
+                invincibility.SetInvincibleForDuration(dashLength);
+            }
+        }
+
+        // Dash countdown
+        if (dashCounter > 0)
+        {
+            activeMoveSpeed = dashSpeed;
+            dashCounter -= Time.deltaTime;
         }
         else
         {
-            anim.SetBool("isMoving", false);
-        } */
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (dashCoolCounter <= 0 && dashCounter <= 0)
-            {
-                activeMoveSpeed = dashSpeed;
-                dashCounter = dashLength;
-                //anim.SetTrigger("Dash");
-                MakeInvincible(dashLength);
-            }
+            activeMoveSpeed = moveSpeed;
         }
 
-        if (dashCounter > 0)
+        // Dash cooldown countdown
+        if (dashCooldownCounter > 0)
         {
-            dashCounter -= Time.deltaTime;
-            if (dashCounter <= 0)
-            {
-                activeMoveSpeed = moveSpeed;
-                dashCoolCounter = dashCooldown;
-            }
-        }
-
-        if (dashCoolCounter > 0)
-        {
-            dashCoolCounter -= Time.deltaTime;
+            dashCooldownCounter -= Time.deltaTime;
         }
     }
 
-    public void MakeInvincible(float duration)
+    void FixedUpdate()
     {
-        isInvincible = true;
-        StartCoroutine(InvincibilityTimer(duration));
-    }
-
-    private IEnumerator InvincibilityTimer(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        isInvincible = false;
-    }
-
-    public bool IsInvincible()
-    {
-        return isInvincible;
+        theRB.velocity = moveInput * activeMoveSpeed;
     }
 }

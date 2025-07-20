@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4713840110795586676}
   - component: {fileID: 4538731377129334578}
+  - component: {fileID: 3680363602972354112}
   - component: {fileID: 3672465243552252630}
+  - component: {fileID: 4101265669090732029}
   - component: {fileID: 1037364208866069336}
   - component: {fileID: 4811200028059484043}
   - component: {fileID: 1312182954531133005}
@@ -66,6 +68,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &3680363602972354112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375226088063364274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78bb836c139cc7d4f926d88d5d4976ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3672465243552252630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +93,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 0
+  dashSpeed: 8
+  dashLength: 0.5
+  dashCooldown: 1
+  dashCounter: 0
+  isInvincible: 0
   anim: {fileID: 0}
+--- !u!114 &4101265669090732029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375226088063364274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75cadbca0fa2673489eb7e707819656b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shield: {fileID: 0}
+  shieldCooldown: 5
+  shieldTime: 2
+  isShieldActive: 0
 --- !u!114 &1037364208866069336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,6 +146,7 @@ MonoBehaviour:
       min: 90
       max: 90
     extraScale: {x: 1, y: 1, z: 1}
+  spawnInterval: 2
 --- !u!114 &4811200028059484043
 MonoBehaviour:
   m_ObjectHideFlags: 0
