@@ -26,8 +26,11 @@ public class Movement : MonoBehaviour
     void Start()
     {
         theRB = GetComponent<Rigidbody2D>();
+        theRB.freezeRotation = true; // Lock rotation so the player doesn't spin
+
         invincibility = GetComponent<PlayerInvincibility>();
     }
+
 
     void Update()
     {
