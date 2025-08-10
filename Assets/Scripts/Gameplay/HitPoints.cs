@@ -15,80 +15,69 @@ namespace Scripts.Gameplay
         public int currentHitPoints = 10;
 
         [Header("UI Settings")]
-        public GameObject hitPointPrefab; // Prefab for each hit point icon
-        public List<Transform> hitPointSlots; // Transforms where icons are placed
+        public GameObject hitPointPrefab;                   // Heart prefab (UI Image)
+        public List<RectTransform> hitPointSlots;           // UI positions in Canvas
 
         [Header("Events")]
         public UnityEvent onDamaged;
         public UnityEvent onHealed;
         public UnityEvent onKilled;
 
-        private List<GameObject> activeHitPoints = new List<GameObject>();
+        private readonly List<GameObject> activeIcons = new List<GameObject>();
 
         public bool IsAlive => currentHitPoints > 0;
 
         private void Start()
         {
-            // Safety check and clamping
             currentHitPoints = Mathf.Clamp(currentHitPoints, 0, maxHitPoints);
 
-            Debug.Log("Initializing hit points...");
-            Debug.Log("Current HP: " + currentHitPoints);
-            Debug.Log("Hit Point Slots Count: " + hitPointSlots.Count);
-
-            InitializeHitPoints();
-        }
-
-        private void InitializeHitPoints()
-        {
-            ClearHitPoints();
-
-            for (int i = 0; i < currentHitPoints && i < hitPointSlots.Count; i++)
+            if (hitPointSlots.Count < maxHitPoints)
             {
-                // Instantiate the prefab as a child of the slot
-                GameObject hp = Instantiate(hitPointPrefab, hitPointSlots[i]);
-
-                // Ensure it aligns perfectly to the slot's local position
-                hp.transform.localPosition = Vector3.zero;
-
-                // Optional: Reset rotation and scale
-                hp.transform.localRotation = Quaternion.identity;
-                hp.transform.localScale = Vector3.one;
-
-                activeHitPoints.Add(hp);
+                Debug.LogWarning("Not enough hitPointSlots assigned in the Inspector. " +
+                                 "Make sure you have 10 RectTransforms under the Canvas.");
             }
+
+            UpdateHitPointDisplay();
         }
 
         private void UpdateHitPointDisplay()
         {
-            ClearHitPoints();
+            ClearIcons();
 
+            // Always fill from the first available slot
             for (int i = 0; i < currentHitPoints && i < hitPointSlots.Count; i++)
             {
-                GameObject hp = Instantiate(hitPointPrefab, hitPointSlots[i]);
-                hp.transform.localPosition = Vector3.zero;
-                hp.transform.localRotation = Quaternion.identity;
-                hp.transform.localScale = Vector3.one;
+                RectTransform slot = hitPointSlots[i];
 
-                activeHitPoints.Add(hp);
+                GameObject icon = Instantiate(hitPointPrefab, slot);
+                RectTransform iconRect = icon.GetComponent<RectTransform>();
+
+                // Reset to perfectly match slot position/size inside UI
+                iconRect.anchorMin = new Vector2(0.5f, 0.5f);
+                iconRect.anchorMax = new Vector2(0.5f, 0.5f);
+                iconRect.anchoredPosition = Vector2.zero;
+                iconRect.localRotation = Quaternion.identity;
+                iconRect.localScale = Vector3.one;
+
+                activeIcons.Add(icon);
             }
         }
 
-        private void ClearHitPoints()
+        private void ClearIcons()
         {
-            foreach (var hp in activeHitPoints)
+            foreach (GameObject icon in activeIcons)
             {
-                if (hp != null)
-                    Destroy(hp);
+                if (icon != null)
+                    Destroy(icon);
             }
-            activeHitPoints.Clear();
+            activeIcons.Clear();
         }
 
         public void TakeDamage(float damage)
         {
-            var wasDead = !IsAlive;
+            bool wasDead = !IsAlive;
 
-            if (damage < 0)
+            if (damage < 0) // Healing
             {
                 currentHitPoints = Mathf.Clamp(currentHitPoints - (int)damage, 0, maxHitPoints);
                 onHealed.Invoke();
@@ -96,24 +85,20 @@ namespace Scripts.Gameplay
                 return;
             }
 
-            if (damage > 0 && !wasDead)
+            if (damage > 0 && !wasDead) // Damage
             {
                 currentHitPoints = Mathf.Clamp(currentHitPoints - (int)damage, 0, maxHitPoints);
 
                 if (IsAlive)
-                {
                     onDamaged.Invoke();
-                }
                 else
-                {
                     onKilled.Invoke();
-                }
 
                 UpdateHitPointDisplay();
                 return;
             }
 
-            // If damage == 0 or already dead
+            // Edge case: damage == 0 or already dead
             currentHitPoints = Mathf.Clamp(currentHitPoints - (int)damage, 0, maxHitPoints);
         }
     }
