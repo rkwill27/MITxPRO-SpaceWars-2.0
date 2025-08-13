@@ -1,0 +1,291 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5666661227699342292
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3081702314120149868, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081702314120149868, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: spawnPrefab
+      value: 
+      objectReference: {fileID: 7973571734031050390, guid: 3cf3c61272dbcbe4cad5ddc971eff26a, type: 3}
+    - target: {fileID: 3209485092981389509, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3209485092981389509, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 3209485092981389509, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3604373599033195647, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5106a46d68e88094283508a4020fef2d, type: 3}
+    - target: {fileID: 4816284795411214173, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: rSpeed.max
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4816284795411214173, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: rSpeed.min
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.12047897
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123861835418990043, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7107573810279563326, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_Name
+      value: PatrollingUFO (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7107573810279563326, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+--- !u!1 &3172551621580868586 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7107573810279563326, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+  m_PrefabInstance: {fileID: 5666661227699342292}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1226294900546295796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172551621580868586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab861d8ea1254cd6bd3996b4c5452dfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2698836263588903646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172551621580868586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0882748dc185476197f6ec16b90304dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notesText: 'In the Distance Detector, we''re using two different ways to perform
+    multiple actions when an event fires.
+
+
+    We have wired up several actions
+    in the Inspector for when the UFO notices the player.
+
+
+    We have wired up
+    only one action in the inspector for when the UFO forgets the player.  However,
+    if you read the code, that single action just performs several sub-actions under
+    the hood.
+
+
+    You can use either pattern depending on your needs.  Keeping
+    everything in the Inspector might be easier for some designers.  Moving it to
+    code might work better with source control.'
+--- !u!114 &5565622828027553936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172551621580868586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e586cfabba45f5b619274c4c578f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentAwareness: 0
+  clampAwareness:
+    min: -1
+    max: 2
+  detectRadius: 3
+  awarenessPerSecondInRadius: 3
+  awarenessPerSecondOutOfRadius: -1
+  detectTarget: {fileID: 0}
+  detectableTargetLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  noticeThreshold:
+    threshold: 1
+    onOverThreshold:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8724063218995034353}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 8964755434765821799}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7232888411640492216}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: Scripts.Gameplay.ConstrainToCircle, Assembly-CSharp
+          m_MethodName: SetRadius
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0.5
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    onUnderThreshold:
+      m_PersistentCalls:
+        m_Calls: []
+    onChange:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: Scripts.UI.ColorSprite, Assembly-CSharp
+          m_MethodName: OnNewInput
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  forgetThreshold:
+    threshold: -1
+    onOverThreshold:
+      m_PersistentCalls:
+        m_Calls: []
+    onUnderThreshold:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1226294900546295796}
+          m_TargetAssemblyTypeName: Scripts.Gameplay.AI.NoticeForget, Assembly-CSharp
+          m_MethodName: OnForget
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    onChange:
+      m_PersistentCalls:
+        m_Calls: []
+--- !u!114 &7232888411640492216 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3081702314120149868, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+  m_PrefabInstance: {fileID: 5666661227699342292}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172551621580868586}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00730e4eb5cf4c89acc98546c8d059cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8724063218995034353 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4014430321041765157, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+  m_PrefabInstance: {fileID: 5666661227699342292}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172551621580868586}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7528a25c95f54474b45d181f7cb5aab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8964755434765821799 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3660639036542266547, guid: 32c980d565f3f6f48ae79f0f879ce088, type: 3}
+  m_PrefabInstance: {fileID: 5666661227699342292}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172551621580868586}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99c573dc1b4e4e72b93694524cdddb11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
