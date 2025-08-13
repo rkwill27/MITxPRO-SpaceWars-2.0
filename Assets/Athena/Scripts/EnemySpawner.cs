@@ -2,39 +2,70 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class WaveEnemy
+{
+    [Tooltip("The enemy prefab to spawn.")]
+    public GameObject prefab;
+
+    [Tooltip("Relative frequency/weight this enemy will be chosen. Higher = more likely.")]
+    public int weight = 1;
+}
+
+[System.Serializable]
+public class SpawnWave
+{
+    [Tooltip("Time (in seconds) since the start of the game when this wave should spawn.")]
+    public float triggerTime;
+
+    [Tooltip("Number of objects to spawn in this wave.")]
+    public int spawnCount = 3;
+
+    [Tooltip("Delay between each individual spawn in this wave.")]
+    public float spawnDelay = 0.2f;
+
+    [Tooltip("Enemies that can spawn in this wave, with spawn frequency weights.")]
+    public List<WaveEnemy> wavePrefabs = new List<WaveEnemy>();
+}
+
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Prefabs to Spawn (Random Selection)")]
-    public List<GameObject> prefabsToSpawn;
-
     [Header("Spawn Points (Do Not Destroy)")]
     public List<Transform> spawnPoints;
 
-    [Header("Spawning Settings")]
-    public int spawnCount = 3;           // Number of enemies to spawn at once
-    public float spawnInterval = 5f;     // Time between spawn waves
+    [Header("Custom Spawn Waves")]
+    public List<SpawnWave> spawnWaves = new List<SpawnWave>();
 
     [Header("Game Timer Reference")]
-    public Timer gameTimer;              // Drag your timer object here (must have elapsedTime)
+    public Timer gameTimer;  // Drag your timer object here (must have elapsedTime)
 
-    private float nextSpawnTime = 0f;
+    private HashSet<int> triggeredWaves = new HashSet<int>(); // Keeps track of which waves have already spawned
 
     void Update()
     {
-        if (gameTimer == null || prefabsToSpawn.Count == 0 || spawnPoints.Count == 0)
+        if (gameTimer == null || spawnPoints.Count == 0)
             return;
 
-        if (gameTimer.elapsedTime >= nextSpawnTime)
+        float currentTime = gameTimer.elapsedTime;
+
+        for (int i = 0; i < spawnWaves.Count; i++)
         {
-            SpawnPrefabs();
-            nextSpawnTime = gameTimer.elapsedTime + spawnInterval;
+            if (!triggeredWaves.Contains(i) && currentTime >= spawnWaves[i].triggerTime)
+            {
+                StartCoroutine(SpawnWaveCoroutine(spawnWaves[i]));
+                triggeredWaves.Add(i);
+            }
         }
     }
 
-    void SpawnPrefabs()
+    IEnumerator SpawnWaveCoroutine(SpawnWave wave)
     {
+        // If no prefabs for this wave, skip
+        if (wave.wavePrefabs.Count == 0)
+            yield break;
+
         // Make sure we don't try to use more spawn points than exist
-        int actualSpawnCount = Mathf.Min(spawnCount, spawnPoints.Count);
+        int actualSpawnCount = Mathf.Min(wave.spawnCount, spawnPoints.Count);
 
         // Shuffle the spawn points list to get unique random positions
         List<Transform> shuffledPoints = new List<Transform>(spawnPoints);
@@ -44,12 +75,36 @@ public class EnemySpawner : MonoBehaviour
         {
             Transform spawnPoint = shuffledPoints[i];
 
-            // Randomly select a prefab to spawn
-            GameObject randomPrefab = prefabsToSpawn[Random.Range(0, prefabsToSpawn.Count)];
+            // Randomly select a prefab based on weight
+            GameObject selectedPrefab = GetWeightedRandomPrefab(wave.wavePrefabs);
 
             // Spawn it at the chosen spawn point
-            Instantiate(randomPrefab, spawnPoint.position, spawnPoint.rotation);
+            Instantiate(selectedPrefab, spawnPoint.position, spawnPoint.rotation);
+
+            // Optional delay before spawning the next object
+            if (i < actualSpawnCount - 1 && wave.spawnDelay > 0f)
+                yield return new WaitForSeconds(wave.spawnDelay);
         }
+    }
+
+    GameObject GetWeightedRandomPrefab(List<WaveEnemy> enemies)
+    {
+        int totalWeight = 0;
+        foreach (var enemy in enemies)
+            totalWeight += Mathf.Max(1, enemy.weight); // Ensure weight is at least 1
+
+        int randomValue = Random.Range(0, totalWeight);
+        int cumulativeWeight = 0;
+
+        foreach (var enemy in enemies)
+        {
+            cumulativeWeight += Mathf.Max(1, enemy.weight);
+            if (randomValue < cumulativeWeight)
+                return enemy.prefab;
+        }
+
+        // Fallback (should never hit)
+        return enemies[0].prefab;
     }
 
     // Fisher-Yates Shuffle to randomize spawn points without duplicates
