@@ -26,12 +26,18 @@ public class SpawnWave
 
     [Tooltip("Enemies that can spawn in this wave, with spawn frequency weights.")]
     public List<WaveEnemy> wavePrefabs = new List<WaveEnemy>();
+
+    [Tooltip("Optional: Spawn points for this wave (leave empty to use global spawn points).")]
+    public List<Transform> waveSpawnPoints = new List<Transform>();
+
+    [Tooltip("If true, each spawn will use a random point from the list instead of sequential order.")]
+    public bool randomizeSpawnPoints = true;
 }
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Spawn Points (Do Not Destroy)")]
-    public List<Transform> spawnPoints;
+    [Header("Global Spawn Points (used if wave has none set)")]
+    public List<Transform> globalSpawnPoints = new List<Transform>();
 
     [Header("Custom Spawn Waves")]
     public List<SpawnWave> spawnWaves = new List<SpawnWave>();
@@ -43,7 +49,7 @@ public class EnemySpawner : MonoBehaviour
 
     void Update()
     {
-        if (gameTimer == null || spawnPoints.Count == 0)
+        if (gameTimer == null)
             return;
 
         float currentTime = gameTimer.elapsedTime;
@@ -60,29 +66,33 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnWaveCoroutine(SpawnWave wave)
     {
-        // If no prefabs for this wave, skip
         if (wave.wavePrefabs.Count == 0)
             yield break;
 
-        // Make sure we don't try to use more spawn points than exist
-        int actualSpawnCount = Mathf.Min(wave.spawnCount, spawnPoints.Count);
+        List<Transform> spawnPointsToUse = wave.waveSpawnPoints.Count > 0 ? wave.waveSpawnPoints : globalSpawnPoints;
+        if (spawnPointsToUse.Count == 0)
+            yield break;
 
-        // Shuffle the spawn points list to get unique random positions
-        List<Transform> shuffledPoints = new List<Transform>(spawnPoints);
-        ShuffleList(shuffledPoints);
+        // Optionally shuffle if not randomizing per spawn
+        if (!wave.randomizeSpawnPoints)
+            ShuffleList(spawnPointsToUse);
 
-        for (int i = 0; i < actualSpawnCount; i++)
+        for (int i = 0; i < wave.spawnCount; i++)
         {
-            Transform spawnPoint = shuffledPoints[i];
+            Transform chosenPoint;
+            if (wave.randomizeSpawnPoints)
+            {
+                chosenPoint = spawnPointsToUse[Random.Range(0, spawnPointsToUse.Count)];
+            }
+            else
+            {
+                chosenPoint = spawnPointsToUse[i % spawnPointsToUse.Count];
+            }
 
-            // Randomly select a prefab based on weight
             GameObject selectedPrefab = GetWeightedRandomPrefab(wave.wavePrefabs);
+            Instantiate(selectedPrefab, chosenPoint.position, chosenPoint.rotation);
 
-            // Spawn it at the chosen spawn point
-            Instantiate(selectedPrefab, spawnPoint.position, spawnPoint.rotation);
-
-            // Optional delay before spawning the next object
-            if (i < actualSpawnCount - 1 && wave.spawnDelay > 0f)
+            if (i < wave.spawnCount - 1 && wave.spawnDelay > 0f)
                 yield return new WaitForSeconds(wave.spawnDelay);
         }
     }
@@ -91,7 +101,7 @@ public class EnemySpawner : MonoBehaviour
     {
         int totalWeight = 0;
         foreach (var enemy in enemies)
-            totalWeight += Mathf.Max(1, enemy.weight); // Ensure weight is at least 1
+            totalWeight += Mathf.Max(1, enemy.weight);
 
         int randomValue = Random.Range(0, totalWeight);
         int cumulativeWeight = 0;
@@ -103,11 +113,9 @@ public class EnemySpawner : MonoBehaviour
                 return enemy.prefab;
         }
 
-        // Fallback (should never hit)
-        return enemies[0].prefab;
+        return enemies[0].prefab; // fallback
     }
 
-    // Fisher-Yates Shuffle to randomize spawn points without duplicates
     void ShuffleList<T>(List<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
