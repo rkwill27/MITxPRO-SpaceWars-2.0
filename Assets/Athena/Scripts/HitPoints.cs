@@ -7,6 +7,8 @@ namespace Scripts.Gameplay
 {
     public class HitPoints : MonoBehaviour
     {
+        public static HitPoints Instance { get; private set; }
+
         [Header("Health Settings")]
         [Range(1, 10)]
         public int maxHitPoints = 10;
@@ -16,8 +18,8 @@ namespace Scripts.Gameplay
         public int currentHitPoints = 10;
 
         [Header("UI Settings")]
-        public GameObject hitPointPrefab; // Heart prefab (UI Image)
-        public List<RectTransform> hitPointSlots; // UI positions in Canvas
+        public GameObject hitPointPrefab;
+        public List<RectTransform> hitPointSlots;
 
         [Header("Events")]
         public UnityEvent onDamaged;
@@ -25,13 +27,23 @@ namespace Scripts.Gameplay
         public UnityEvent onKilled;
 
         [Header("Death Settings")]
-        public GameObject deathScreenUI; // Assign the death screen in Inspector
-        public float deathDelay = 2f;    // Delay before showing death screen
+        public GameObject deathScreenUI;
+        public float deathDelay = 2f;
 
         private readonly List<GameObject> activeIcons = new List<GameObject>();
         private Movement movementScript;
 
         public bool IsAlive => currentHitPoints > 0;
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject); // Avoid duplicate instances
+                return;
+            }
+            Instance = this;
+        }
 
         private void Start()
         {
@@ -117,15 +129,20 @@ namespace Scripts.Gameplay
             currentHitPoints = Mathf.Clamp(currentHitPoints - (int)damage, 0, maxHitPoints);
         }
 
+        public void HealPlayer(int healAmount)
+        {
+            currentHitPoints = Mathf.Clamp(currentHitPoints + healAmount, 0, maxHitPoints);
+            onHealed.Invoke();
+            UpdateHitPointDisplay();
+        }
+
         private IEnumerator HandleDeath()
         {
-            // Freeze player movement
             if (movementScript != null)
             {
                 movementScript.enabled = false;
             }
 
-            // Stop Rigidbody motion
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             if (rb != null)
             {
@@ -133,10 +150,8 @@ namespace Scripts.Gameplay
                 rb.isKinematic = true;
             }
 
-            // Wait for death delay before showing death screen
             yield return new WaitForSeconds(deathDelay);
 
-            // Show death screen
             if (deathScreenUI != null)
             {
                 deathScreenUI.SetActive(true);
@@ -146,7 +161,6 @@ namespace Scripts.Gameplay
                 Debug.LogWarning("Death screen UI is not assigned in Inspector.");
             }
 
-            // Freeze all gameplay
             Time.timeScale = 0f;
         }
     }

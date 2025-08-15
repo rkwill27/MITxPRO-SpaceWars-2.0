@@ -12,14 +12,7 @@ GameObject:
   - component: {fileID: 6018853167986121553}
   - component: {fileID: 4716200456487957184}
   - component: {fileID: 7953419444388260162}
-  - component: {fileID: 6860140237497657014}
-  - component: {fileID: 181866891976908858}
-  - component: {fileID: 3400164379247207768}
-  - component: {fileID: 1479849534132526517}
-  - component: {fileID: 6242095614813989014}
-  - component: {fileID: 6507474857199843616}
   - component: {fileID: 6510617452854099735}
-  - component: {fileID: 5133339488806744425}
   - component: {fileID: 3628076205367760421}
   - component: {fileID: 443914527868320527}
   - component: {fileID: 7953419444388260161}
@@ -119,199 +112,10 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6115614045583681578, guid: bd8545cd1ca55634088f72a59b12a136, type: 3}
   firePoint: {fileID: 1301364909735326756}
   fireInterval: 3
---- !u!114 &6860140237497657014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1106199154083465787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99c573dc1b4e4e72b93694524cdddb11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rMaxSecondsBetweenDestinations:
-    min: 4
-    max: 4
-  rMaxSecondsAtDestination:
-    min: 1
-    max: 1
-  destinationConstraint: {fileID: 0}
-  constraintTag: UFO Area
-  closeEnoughDistance: 0.1
-  onDestinationChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  onDestinationReached:
-    m_PersistentCalls:
-      m_Calls: []
-  rStepSize:
-    min: 4
-    max: 8
-  sDestinationTimeOut: 0
---- !u!114 &181866891976908858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1106199154083465787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53b627d1ef1d4c3780edc0adf6cd47ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3400164379247207768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1106199154083465787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79fae1287c554b58a84c8b2b54477eee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxAcceleration: 1000
-  rSpeed:
-    min: 1
-    max: 1
---- !u!114 &1479849534132526517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1106199154083465787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23b84d1b44934c218909ed8c21116e84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lerpCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.078364305
-      value: 0.07093786
-      inSlope: 5.0014815
-      outSlope: 5.0014815
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.122998394
-    - serializedVersion: 3
-      time: 0.13171902
-      value: 0.20669354
-      inSlope: -2.730109
-      outSlope: -2.730109
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.209578
-    - serializedVersion: 3
-      time: 0.45752126
-      value: 0.42023802
-      inSlope: 2.6126742
-      outSlope: 2.6126742
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.34280896
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  rMovementDuration:
-    min: 4
-    max: 4
---- !u!114 &6242095614813989014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1106199154083465787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23b84d1b44934c218909ed8c21116e84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lerpCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  rMovementDuration:
-    min: 4
-    max: 4
---- !u!114 &6507474857199843616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1106199154083465787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7528a25c95f54474b45d181f7cb5aab7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rMaxSecondsBetweenDestinations:
-    min: 3.4028235e+38
-    max: 3.4028235e+38
-  rMaxSecondsAtDestination:
-    min: 3.4028235e+38
-    max: 3.4028235e+38
-  destinationConstraint: {fileID: 0}
-  constraintTag: UFO Area
-  closeEnoughDistance: 0.1
-  onDestinationChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  onDestinationReached:
-    m_PersistentCalls:
-      m_Calls: []
-  targetObject: {fileID: 0}
-  targetPositionDeltaForDestinationUpdate: 1
+  shouldDropItem: 1
+  itemsToDrop:
+  - itemPrefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+    dropChancePercent: 100
 --- !u!114 &6510617452854099735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,51 +132,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 131072
   scoreValue: 10
---- !u!114 &5133339488806744425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1106199154083465787}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00730e4eb5cf4c89acc98546c8d059cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spikeSpawnPeriod:
-    rSecondsBetweenSpikes:
-      min: 1
-      max: 1
-    rSpikeDurationInSeconds:
-      min: 1
-      max: 1
-    rSpikeValue:
-      min: 3
-      max: 3
-    currentSpike:
-      sSpikeInterval:
-        min: 0
-        max: 0
-      spikeValue: 0
-  spawnPrefab: {fileID: 6115614045583681578, guid: bd8545cd1ca55634088f72a59b12a136, type: 3}
-  spawnArea: {fileID: 0}
-  spawnInfo:
-    allowSpawnWhenPaused: 0
-    spawnPosition: {x: 0, y: 0, z: 0}
-    setSpawnPosition: 1
-    rotateSpawnPosition: 0
-    addSpawnPosition: 1
-    setSpawnVelocity: 1
-    rotateSpawnVelocity: 1
-    addSpawnVelocity: 1
-    spawnSpeed:
-      min: 3
-      max: 3
-    degSpawnVelocityAngle:
-      min: 0
-      max: 360
-    extraScale: {x: 1, y: 1, z: 1}
 --- !u!114 &3628076205367760421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,7 +201,7 @@ MonoBehaviour:
     onOverThreshold:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 6507474857199843616}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
           m_MethodName: set_enabled
           m_Mode: 6
@@ -454,7 +213,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 6860140237497657014}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
           m_MethodName: set_enabled
           m_Mode: 6
@@ -466,7 +225,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 5133339488806744425}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
           m_MethodName: set_enabled
           m_Mode: 6

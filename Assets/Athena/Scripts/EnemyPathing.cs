@@ -29,6 +29,17 @@ public class EnemyPathing : MonoBehaviour
     public float fireInterval = 2f;
     private float fireTimer = 0f;
 
+    [System.Serializable]
+    public class ItemDrop
+    {
+        public GameObject itemPrefab;
+        [Range(0f, 100f)] public float dropChancePercent; // e.g., 25 = 25% chance
+    }
+
+    [Header("Pickups")]
+    public bool shouldDropItem;
+    public ItemDrop[] itemsToDrop;
+
     private Rigidbody2D rb;
 
     void Start()
@@ -38,7 +49,6 @@ public class EnemyPathing : MonoBehaviour
 
         if (randomizeAfterFirst)
         {
-            // Fill the list with indexes after the first
             for (int i = 1; i < patrolPoints.Length; i++)
                 remainingPoints.Add(i);
         }
@@ -67,7 +77,6 @@ public class EnemyPathing : MonoBehaviour
                     currentPoint = remainingPoints[nextIndex];
                     remainingPoints.RemoveAt(nextIndex);
 
-                    // Refill list if all used
                     if (remainingPoints.Count == 0)
                     {
                         for (int i = 1; i < patrolPoints.Length; i++)
@@ -93,7 +102,6 @@ public class EnemyPathing : MonoBehaviour
             Vector2 desiredVelocity = direction * moveSpeed;
             rb.velocity = Vector2.SmoothDamp(rb.velocity, desiredVelocity, ref velocitySmoothing, smoothTime);
 
-            // Flip sprite if desired (optional)
             if (direction.x != 0)
                 transform.localScale = new Vector3(direction.x < 0 ? 1f : -1f, 1f, 1f);
         }
@@ -130,6 +138,24 @@ public class EnemyPathing : MonoBehaviour
                     Gizmos.DrawSphere(patrolPoints[i].position, 0.2f);
                     if (i < patrolPoints.Length - 1 && patrolPoints[i + 1] != null)
                         Gizmos.DrawLine(patrolPoints[i].position, patrolPoints[i + 1].position);
+                }
+            }
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (Application.isPlaying && shouldDropItem && itemsToDrop.Length > 0)
+        {
+            foreach (ItemDrop drop in itemsToDrop)
+            {
+                if (drop.itemPrefab == null) continue;
+
+                float roll = Random.Range(0f, 100f);
+
+                if (roll <= drop.dropChancePercent)
+                {
+                    Instantiate(drop.itemPrefab, transform.position, Quaternion.identity);
                 }
             }
         }

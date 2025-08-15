@@ -51,7 +51,7 @@ MonoBehaviour:
   spawnWaves:
   - triggerTime: 5
     spawnCount: 5
-    spawnDelay: 1
+    spawnDelay: 2
     wavePrefabs:
     - prefab: {fileID: 4878534786273308443, guid: 5bcdebf08137c014aa24536f366541f3, type: 3}
       weight: 10

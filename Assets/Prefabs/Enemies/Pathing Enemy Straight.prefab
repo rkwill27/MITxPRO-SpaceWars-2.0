@@ -449,6 +449,10 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6115614045583681578, guid: bd8545cd1ca55634088f72a59b12a136, type: 3}
   firePoint: {fileID: 4878534785119327971}
   fireInterval: 3
+  shouldDropItem: 1
+  itemsToDrop:
+  - itemPrefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+    dropChancePercent: 100
 --- !u!114 &1049185625945359473
 MonoBehaviour:
   m_ObjectHideFlags: 0
