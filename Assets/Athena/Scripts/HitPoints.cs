@@ -33,6 +33,9 @@ namespace Scripts.Gameplay
         private readonly List<GameObject> activeIcons = new List<GameObject>();
         private Movement movementScript;
 
+        private static bool applicationIsQuitting = false;
+        private bool isBeingDestroyed = false; // 🔥 NEW flag
+
         public bool IsAlive => currentHitPoints > 0;
 
         private void Awake()
@@ -58,13 +61,28 @@ namespace Scripts.Gameplay
             UpdateHitPointDisplay();
         }
 
+        private void OnApplicationQuit()
+        {
+            applicationIsQuitting = true;
+        }
+
+        private void OnDestroy()
+        {
+            // Mark that this object is being destroyed so no new UI is created
+            isBeingDestroyed = true;
+        }
+
         private void UpdateHitPointDisplay()
         {
+            // 🚫 Prevent creating icons during quit or destruction
+            if (applicationIsQuitting || isBeingDestroyed) return;
+
             ClearIcons();
 
             for (int i = 0; i < currentHitPoints && i < hitPointSlots.Count; i++)
             {
                 RectTransform slot = hitPointSlots[i];
+                if (slot == null) continue;
 
                 GameObject icon = Instantiate(hitPointPrefab, slot);
                 RectTransform iconRect = icon.GetComponent<RectTransform>();
@@ -98,6 +116,8 @@ namespace Scripts.Gameplay
 
         public void TakeDamage(float damage)
         {
+            if (applicationIsQuitting || isBeingDestroyed) return; // 🚫 Stop updates when quitting
+
             bool wasDead = !IsAlive;
 
             if (damage < 0) // Healing
@@ -131,6 +151,8 @@ namespace Scripts.Gameplay
 
         public void HealPlayer(int healAmount)
         {
+            if (applicationIsQuitting || isBeingDestroyed) return; // 🚫 Stop updates when quitting
+
             currentHitPoints = Mathf.Clamp(currentHitPoints + healAmount, 0, maxHitPoints);
             onHealed.Invoke();
             UpdateHitPointDisplay();

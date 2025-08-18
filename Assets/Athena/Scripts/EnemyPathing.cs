@@ -145,7 +145,7 @@ public class EnemyPathing : MonoBehaviour
 
     void OnDestroy()
     {
-        if (Application.isPlaying && shouldDropItem && itemsToDrop.Length > 0)
+        if (Application.isPlaying && !applicationIsQuitting && shouldDropItem && itemsToDrop.Length > 0)
         {
             foreach (ItemDrop drop in itemsToDrop)
             {
@@ -159,5 +159,13 @@ public class EnemyPathing : MonoBehaviour
                 }
             }
         }
+    }
+
+    // Add this static flag at the top of the class
+    private static bool applicationIsQuitting = false;
+
+    private void OnApplicationQuit()
+    {
+        applicationIsQuitting = true;
     }
 }

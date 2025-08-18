@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4713840110795586676}
+  - component: {fileID: 7781732902904990049}
   - component: {fileID: 4538731377129334578}
   - component: {fileID: 3680363602972354112}
   - component: {fileID: 3672465243552252630}
@@ -47,6 +48,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &7781732902904990049
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375226088063364274}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.561452, y: -0.42561522}
+      - {x: -0.011433452, y: 0.5061227}
+      - {x: 0.56129557, y: -0.4254993}
 --- !u!50 &4538731377129334578
 Rigidbody2D:
   serializedVersion: 4
@@ -96,9 +125,6 @@ MonoBehaviour:
   dashSpeed: 8
   dashLength: 0.5
   dashCooldown: 1
-  dashCounter: 0
-  isInvincible: 0
-  anim: {fileID: 0}
 --- !u!114 &4101265669090732029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,6 +425,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHitPoints: 10000
   currentHitPoints: 10000
+  hitPointPrefab: {fileID: 0}
+  hitPointSlots: []
   onDamaged:
     m_PersistentCalls:
       m_Calls:
@@ -432,6 +460,8 @@ MonoBehaviour:
           m_StringArgument: Oh, I am slain.
           m_BoolArgument: 0
         m_CallState: 2
+  deathScreenUI: {fileID: 0}
+  deathDelay: 2
 --- !u!114 &8401399413668568950
 MonoBehaviour:
   m_ObjectHideFlags: 0
