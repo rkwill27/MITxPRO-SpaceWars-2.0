@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7314066600491166964}
   - component: {fileID: 1459701361226210237}
+  - component: {fileID: 1207393819767659854}
   - component: {fileID: 8254114458555999790}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Basic Enemy 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,6 +56,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1207393819767659854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292471353829829487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11a2f67b96fddb44a95ee2e67e74b2aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 6115614045583681578, guid: bd8545cd1ca55634088f72a59b12a136, type: 3}
+  firePoint: {fileID: 8956839656840082998}
+  fireRate: 1.5
+  projectileSpeed: 5
 --- !u!114 &8254114458555999790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,9 +131,6 @@ GameObject:
   - component: {fileID: 6291279485957521357}
   - component: {fileID: 3539578359544842106}
   - component: {fileID: 1876564629467352826}
-  - component: {fileID: 6451689691847650317}
-  - component: {fileID: 6218218442776222103}
-  - component: {fileID: 8674399725467595538}
   m_Layer: 16
   m_Name: 'PathingUFO '
   m_TagString: Untagged
@@ -132,7 +146,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3254301336009348427}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.85, y: 6.43, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,164 +200,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 131072
   scoreValue: 10
---- !u!114 &6451689691847650317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3254301336009348427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab861d8ea1254cd6bd3996b4c5452dfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6218218442776222103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3254301336009348427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0882748dc185476197f6ec16b90304dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  notesText: 'In the Distance Detector, we''re using two different ways to perform
-    multiple actions when an event fires.
-
-
-    We have wired up several actions
-    in the Inspector for when the UFO notices the player.
-
-
-    We have wired up
-    only one action in the inspector for when the UFO forgets the player.  However,
-    if you read the code, that single action just performs several sub-actions under
-    the hood.
-
-
-    You can use either pattern depending on your needs.  Keeping
-    everything in the Inspector might be easier for some designers.  Moving it to
-    code might work better with source control.'
---- !u!114 &8674399725467595538
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3254301336009348427}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4e586cfabba45f5b619274c4c578f0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentAwareness: 0
-  clampAwareness:
-    min: -1
-    max: 2
-  detectRadius: 3
-  awarenessPerSecondInRadius: 3
-  awarenessPerSecondOutOfRadius: -1
-  detectTarget: {fileID: 0}
-  detectableTargetLayers:
-    serializedVersion: 2
-    m_Bits: 1024
-  noticeThreshold:
-    threshold: 1
-    onOverThreshold:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Scripts.Gameplay.ConstrainToCircle, Assembly-CSharp
-          m_MethodName: SetRadius
-          m_Mode: 4
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0.5
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-    onUnderThreshold:
-      m_PersistentCalls:
-        m_Calls: []
-    onChange:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Scripts.UI.ColorSprite, Assembly-CSharp
-          m_MethodName: OnNewInput
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  forgetThreshold:
-    threshold: -1
-    onOverThreshold:
-      m_PersistentCalls:
-        m_Calls: []
-    onUnderThreshold:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6451689691847650317}
-          m_TargetAssemblyTypeName: Scripts.Gameplay.AI.NoticeForget, Assembly-CSharp
-          m_MethodName: OnForget
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    onChange:
-      m_PersistentCalls:
-        m_Calls: []
 --- !u!1 &7933527746526124038
 GameObject:
   m_ObjectHideFlags: 0
