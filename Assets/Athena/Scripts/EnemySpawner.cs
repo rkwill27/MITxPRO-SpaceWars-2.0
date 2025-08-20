@@ -2,128 +2,130 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class WaveEnemy
-{
-    [Tooltip("The enemy prefab to spawn.")]
-    public GameObject prefab;
-
-    [Tooltip("Relative frequency/weight this enemy will be chosen. Higher = more likely.")]
-    public int weight = 1;
-}
-
-[System.Serializable]
-public class SpawnWave
-{
-    [Tooltip("Time (in seconds) since the start of the game when this wave should spawn.")]
-    public float triggerTime;
-
-    [Tooltip("Number of objects to spawn in this wave.")]
-    public int spawnCount = 3;
-
-    [Tooltip("Delay between each individual spawn in this wave.")]
-    public float spawnDelay = 0.2f;
-
-    [Tooltip("Enemies that can spawn in this wave, with spawn frequency weights.")]
-    public List<WaveEnemy> wavePrefabs = new List<WaveEnemy>();
-
-    [Tooltip("Optional: Spawn points for this wave (leave empty to use global spawn points).")]
-    public List<Transform> waveSpawnPoints = new List<Transform>();
-
-    [Tooltip("If true, each spawn will use a random point from the list instead of sequential order.")]
-    public bool randomizeSpawnPoints = true;
-}
-
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Global Spawn Points (used if wave has none set)")]
-    public List<Transform> globalSpawnPoints = new List<Transform>();
+    [Header("Game Timer Reference")]
+    public Timer gameTimer; // Drag your timer object here (must have elapsedTime)
 
-    [Header("Custom Spawn Waves")]
+    [Header("Spawn Waves")]
     public List<SpawnWave> spawnWaves = new List<SpawnWave>();
 
-    [Header("Game Timer Reference")]
-    public Timer gameTimer;  // Drag your timer object here (must have elapsedTime)
-
-    private HashSet<int> triggeredWaves = new HashSet<int>(); // Keeps track of which waves have already spawned
+    private int currentWaveIndex = 0;
+    private bool spawning = false;
 
     void Update()
     {
-        if (gameTimer == null)
-            return;
+        if (gameTimer == null || spawning) return;
 
-        float currentTime = gameTimer.elapsedTime;
-
-        for (int i = 0; i < spawnWaves.Count; i++)
+        if (currentWaveIndex < spawnWaves.Count)
         {
-            if (!triggeredWaves.Contains(i) && currentTime >= spawnWaves[i].triggerTime)
+            SpawnWave wave = spawnWaves[currentWaveIndex];
+            if (gameTimer.elapsedTime >= wave.startTime)
             {
-                StartCoroutine(SpawnWaveCoroutine(spawnWaves[i]));
-                triggeredWaves.Add(i);
+                Debug.Log($"[Spawner] Starting wave {currentWaveIndex + 1} at {gameTimer.elapsedTime:F1}s");
+                StartCoroutine(SpawnWaveCoroutine(wave));
+                currentWaveIndex++;
             }
         }
     }
 
     IEnumerator SpawnWaveCoroutine(SpawnWave wave)
     {
-        if (wave.wavePrefabs.Count == 0)
-            yield break;
+        spawning = true;
 
-        List<Transform> spawnPointsToUse = wave.waveSpawnPoints.Count > 0 ? wave.waveSpawnPoints : globalSpawnPoints;
-        if (spawnPointsToUse.Count == 0)
-            yield break;
-
-        // Optionally shuffle if not randomizing per spawn
-        if (!wave.randomizeSpawnPoints)
-            ShuffleList(spawnPointsToUse);
-
-        for (int i = 0; i < wave.spawnCount; i++)
+        for (int i = 0; i < wave.quantity; i++)
         {
-            Transform chosenPoint;
-            if (wave.randomizeSpawnPoints)
+            if (wave.wavePrefabs.Count == 0 || wave.spawnPoints.Count == 0)
             {
-                chosenPoint = spawnPointsToUse[Random.Range(0, spawnPointsToUse.Count)];
+                Debug.LogWarning("[Spawner] Wave skipped: No prefabs or spawn points assigned!");
+                yield break;
+            }
+
+            // Pick a prefab using frequency weights
+            GameObject selectedPrefab = wave.GetRandomPrefab();
+            Transform chosenPoint = wave.spawnPoints[Random.Range(0, wave.spawnPoints.Count)];
+
+            GameObject enemy = Instantiate(selectedPrefab, chosenPoint.position, chosenPoint.rotation);
+            Debug.Log($"[Spawner] Spawned {enemy.name} at {chosenPoint.position}");
+
+            // Apply pathing data if the prefab has EnemyPathing
+            EnemyPathing pathing = enemy.GetComponent<EnemyPathing>();
+            if (pathing != null)
+            {
+                if (wave.patrolPoints != null && wave.patrolPoints.Count > 0)
+                {
+                    pathing.patrolPoints = new List<Transform>(wave.patrolPoints);
+                    Debug.Log($"[Spawner] Assigned {pathing.patrolPoints.Count} patrol points to {enemy.name}");
+                }
+                else
+                {
+                    Debug.LogWarning($"[Spawner] No patrol points assigned for {enemy.name}");
+                }
+
+                // Transfer movement settings
+                pathing.randomizeAfterFirst = wave.randomizeAfterFirst;
+                pathing.moveSpeed = wave.moveSpeed;
+                pathing.waitTimeAtPoints = wave.waitTimeAtPoints;
+                pathing.smoothTime = wave.smoothTime;
             }
             else
             {
-                chosenPoint = spawnPointsToUse[i % spawnPointsToUse.Count];
+                Debug.LogWarning($"[Spawner] Spawned {enemy.name} but it has no EnemyPathing component!");
             }
 
-            GameObject selectedPrefab = GetWeightedRandomPrefab(wave.wavePrefabs);
-            Instantiate(selectedPrefab, chosenPoint.position, chosenPoint.rotation);
-
-            if (i < wave.spawnCount - 1 && wave.spawnDelay > 0f)
-                yield return new WaitForSeconds(wave.spawnDelay);
+            yield return new WaitForSeconds(wave.spawnDelay);
         }
-    }
 
-    GameObject GetWeightedRandomPrefab(List<WaveEnemy> enemies)
+        spawning = false;
+    }
+}
+
+[System.Serializable]
+public class SpawnWave
+{
+    [Header("Timing")]
+    public float startTime = 0f;   // When wave starts in seconds
+    public int quantity = 3;       // Number of enemies
+    public float spawnDelay = 0.5f; // Delay between spawns in the same wave
+
+    [Header("Prefabs with Frequencies")]
+    public List<PrefabFrequency> wavePrefabs = new List<PrefabFrequency>();
+
+    [Header("Spawn Points")]
+    public List<Transform> spawnPoints = new List<Transform>();
+
+    [Header("Patrol Points")]
+    public List<Transform> patrolPoints = new List<Transform>();
+    public bool randomizeAfterFirst = false;
+
+    [Header("Movement Settings")]
+    public float moveSpeed = 3f;
+    public float waitTimeAtPoints = 1f;
+    public float smoothTime = 0.2f;
+
+    public GameObject GetRandomPrefab()
     {
+        if (wavePrefabs.Count == 0) return null;
+
         int totalWeight = 0;
-        foreach (var enemy in enemies)
-            totalWeight += Mathf.Max(1, enemy.weight);
+        foreach (var pf in wavePrefabs) totalWeight += Mathf.Max(1, pf.frequency);
 
-        int randomValue = Random.Range(0, totalWeight);
-        int cumulativeWeight = 0;
+        int roll = Random.Range(0, totalWeight);
+        int cumulative = 0;
 
-        foreach (var enemy in enemies)
+        foreach (var pf in wavePrefabs)
         {
-            cumulativeWeight += Mathf.Max(1, enemy.weight);
-            if (randomValue < cumulativeWeight)
-                return enemy.prefab;
+            cumulative += Mathf.Max(1, pf.frequency);
+            if (roll < cumulative)
+                return pf.prefab;
         }
-
-        return enemies[0].prefab; // fallback
+        return wavePrefabs[0].prefab; // fallback
     }
+}
 
-    void ShuffleList<T>(List<T> list)
-    {
-        for (int i = list.Count - 1; i > 0; i--)
-        {
-            int randIndex = Random.Range(0, i + 1);
-            T temp = list[i];
-            list[i] = list[randIndex];
-            list[randIndex] = temp;
-        }
-    }
+[System.Serializable]
+public class PrefabFrequency
+{
+    public GameObject prefab;
+    public int frequency = 1; // Higher = more likely
 }

@@ -1,65 +1,40 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyPathing : MonoBehaviour
 {
-    [Header("Path Settings")]
-    public Transform[] patrolPoints;
+    [Header("Path Settings (assigned by Spawner)")]
+    public List<Transform> patrolPoints;
+    public bool randomizeAfterFirst = false;
+
+    [Header("Movement Settings (assigned by Spawner)")]
+    public float moveSpeed = 3f;
+    public float waitTimeAtPoints = 1f;
+    public float smoothTime = 0.2f;
+
     private int currentPoint = 0;
     private List<int> remainingPoints = new List<int>();
     private bool firstPointReached = false;
-
-    [Tooltip("Randomize patrol after first point is reached")]
-    public bool randomizeAfterFirst = false;
-
-    [Header("Movement Settings")]
-    public float moveSpeed = 3f;
-    public float waitTimeAtPoints = 1f;
     private float waitTimer = 0f;
     private bool isWaiting = false;
-
-    public float smoothTime = 0.2f;
     private Vector2 velocitySmoothing;
-
-    [Header("Projectile Settings")]
-    public GameObject projectilePrefab;
-    public Transform firePoint;
-    public float fireInterval = 2f;
-    private float fireTimer = 0f;
-
-    [System.Serializable]
-    public class ItemDrop
-    {
-        public GameObject itemPrefab;
-        [Range(0f, 100f)] public float dropChancePercent; // e.g., 25 = 25% chance
-    }
-
-    [Header("Pickups")]
-    public bool shouldDropItem;
-    public ItemDrop[] itemsToDrop;
-
     private Rigidbody2D rb;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        isWaiting = false;
-
-        if (randomizeAfterFirst)
+        if (randomizeAfterFirst && patrolPoints != null && patrolPoints.Count > 1)
         {
-            for (int i = 1; i < patrolPoints.Length; i++)
+            for (int i = 1; i < patrolPoints.Count; i++)
                 remainingPoints.Add(i);
         }
     }
 
     void FixedUpdate()
     {
-        if (patrolPoints == null || patrolPoints.Length == 0) return;
-
+        if (patrolPoints == null || patrolPoints.Count == 0) return;
         HandleMovement();
-        HandleFiring();
     }
 
     void HandleMovement()
@@ -79,13 +54,13 @@ public class EnemyPathing : MonoBehaviour
 
                     if (remainingPoints.Count == 0)
                     {
-                        for (int i = 1; i < patrolPoints.Length; i++)
+                        for (int i = 1; i < patrolPoints.Count; i++)
                             remainingPoints.Add(i);
                     }
                 }
                 else
                 {
-                    currentPoint = (currentPoint + 1) % patrolPoints.Length;
+                    currentPoint = (currentPoint + 1) % patrolPoints.Count;
                 }
             }
 
@@ -114,58 +89,5 @@ public class EnemyPathing : MonoBehaviour
             if (!firstPointReached)
                 firstPointReached = true;
         }
-    }
-
-    void HandleFiring()
-    {
-        fireTimer -= Time.fixedDeltaTime;
-        if (fireTimer <= 0f && projectilePrefab != null && firePoint != null)
-        {
-            Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-            fireTimer = fireInterval;
-        }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        if (patrolPoints != null && patrolPoints.Length > 1)
-        {
-            for (int i = 0; i < patrolPoints.Length; i++)
-            {
-                if (patrolPoints[i] != null)
-                {
-                    Gizmos.DrawSphere(patrolPoints[i].position, 0.2f);
-                    if (i < patrolPoints.Length - 1 && patrolPoints[i + 1] != null)
-                        Gizmos.DrawLine(patrolPoints[i].position, patrolPoints[i + 1].position);
-                }
-            }
-        }
-    }
-
-    void OnDestroy()
-    {
-        if (Application.isPlaying && !applicationIsQuitting && shouldDropItem && itemsToDrop.Length > 0)
-        {
-            foreach (ItemDrop drop in itemsToDrop)
-            {
-                if (drop.itemPrefab == null) continue;
-
-                float roll = Random.Range(0f, 100f);
-
-                if (roll <= drop.dropChancePercent)
-                {
-                    Instantiate(drop.itemPrefab, transform.position, Quaternion.identity);
-                }
-            }
-        }
-    }
-
-    // Add this static flag at the top of the class
-    private static bool applicationIsQuitting = false;
-
-    private void OnApplicationQuit()
-    {
-        applicationIsQuitting = true;
     }
 }
