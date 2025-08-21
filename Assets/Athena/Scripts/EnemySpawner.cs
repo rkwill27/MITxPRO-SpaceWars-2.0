@@ -54,8 +54,9 @@ public class EnemySpawner : MonoBehaviour
             {
                 if (wave.patrolPoints != null && wave.patrolPoints.Count > 0)
                 {
-                    pathing.patrolPoints = new List<Transform>(wave.patrolPoints);
-                    Debug.Log($"[Spawner] Assigned {pathing.patrolPoints.Count} patrol points to {enemy.name}");
+                    // FIX: Convert List<Transform> to Transform[] for EnemyPathing
+                    pathing.patrolPoints = wave.patrolPoints.ToArray();
+                    Debug.Log($"[Spawner] Assigned {pathing.patrolPoints.Length} patrol points to {enemy.name}");
                 }
                 else
                 {
