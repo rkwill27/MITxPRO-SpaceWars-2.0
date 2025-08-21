@@ -89,6 +89,10 @@ MonoBehaviour:
   moveSpeed: 3
   waitTimeAtPoints: 1
   smoothTime: 0.2
+  shouldDropItem: 1
+  itemsToDrop:
+  - itemPrefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+    dropChancePercent: 100
 --- !u!1 &2519725713663993314
 GameObject:
   m_ObjectHideFlags: 0

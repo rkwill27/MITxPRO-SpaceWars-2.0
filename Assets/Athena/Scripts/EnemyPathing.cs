@@ -21,9 +21,24 @@ public class EnemyPathing : MonoBehaviour
     private Vector2 velocitySmoothing;
     private Rigidbody2D rb;
 
-    void Start()
+    // ----------------------
+    // Item Drop Settings
+    // ----------------------
+    [System.Serializable]
+    public class ItemDrop
+    {
+        public GameObject itemPrefab;
+        [Range(0f, 100f)] public float dropChancePercent = 25f; // Default 25%
+    }
+
+    [Header("Pickup Drop Settings")]
+    public bool shouldDropItem = true;
+    public ItemDrop[] itemsToDrop;
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
         if (randomizeAfterFirst && patrolPoints != null && patrolPoints.Count > 1)
         {
             for (int i = 1; i < patrolPoints.Count; i++)
@@ -88,6 +103,52 @@ public class EnemyPathing : MonoBehaviour
 
             if (!firstPointReached)
                 firstPointReached = true;
+        }
+    }
+
+    // ----------------------
+    // Public Death Function
+    // ----------------------
+    public void Die()
+    {
+        DropItems();
+        Destroy(gameObject);
+    }
+
+    // ----------------------
+    // Item Drop Logic
+    // ----------------------
+    private void DropItems()
+    {
+        if (!shouldDropItem || itemsToDrop == null || itemsToDrop.Length == 0)
+        {
+            Debug.Log($"[EnemyPathing] {gameObject.name}: No items to drop.");
+            return;
+        }
+
+        Debug.Log($"[EnemyPathing] {gameObject.name}: Attempting to drop items...");
+
+        foreach (ItemDrop drop in itemsToDrop)
+        {
+            if (drop.itemPrefab == null)
+            {
+                Debug.LogWarning($"[EnemyPathing] Drop skipped: itemPrefab is null.");
+                continue;
+            }
+
+            float roll = Random.Range(0f, 100f);
+            Debug.Log($"[EnemyPathing] Rolled {roll:F1} for {drop.itemPrefab.name} (Chance {drop.dropChancePercent}%)");
+
+            if (roll <= drop.dropChancePercent)
+            {
+                GameObject pickup = Instantiate(drop.itemPrefab, transform.position, Quaternion.identity);
+                pickup.SetActive(true); // ensure visible
+                Debug.Log($"[EnemyPathing] Dropped {drop.itemPrefab.name} at {transform.position}");
+            }
+            else
+            {
+                Debug.Log($"[EnemyPathing] {drop.itemPrefab.name} not dropped (roll {roll:F1} > chance {drop.dropChancePercent})");
+            }
         }
     }
 }
