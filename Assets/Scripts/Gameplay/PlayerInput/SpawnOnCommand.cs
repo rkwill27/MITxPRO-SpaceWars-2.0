@@ -8,29 +8,29 @@ namespace Scripts.Gameplay.PlayerInput
 {
     public class SpawnOnCommand : InputHandlerBase
     {
+        [Header("Projectile Settings")]
         public GameObject prefabSpawnMe;
         public Transform spawnedObjectParent;
         public SpawnInfo spawnInfo = new SpawnInfo();
 
-        public float spawnInterval = 2f; // Seconds between spawns
+        [Tooltip("Seconds between shots")]
+        public float spawnInterval = 0.25f; // fire rate
         private float spawnTimer;
+
+        [Tooltip("Projectile travel speed on Y axis")]
+        public float projectileSpeed = 10f;
+
+        [Tooltip("Seconds before projectile self-destructs")]
+        public float projectileLifetime = 5f;
 
         protected override void OnEnable()
         {
             base.OnEnable();
-
-            // Commented out input-based spawning
-            // this.myPlayerInput.Player.Fire.Enable();
-            // this.myPlayerInput.Player.Fire.performed += this.SpawnPrefab;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-
-            // Commented out input-based unbinding
-            // this.myPlayerInput.Player.Fire.Disable();
-            // myPlayerInput.Player.Fire.performed -= this.SpawnPrefab;
         }
 
         private void Update()
@@ -45,23 +45,28 @@ namespace Scripts.Gameplay.PlayerInput
             }
         }
 
-        // Modified to be parameterless for timer use
         private void SpawnPrefab()
         {
             if (this.prefabSpawnMe == null) return;
 
-            this.spawnInfo.Spawn(this.transform, this.prefabSpawnMe.transform, this.spawnedObjectParent);
+            // Spawn projectile (SpawnInfo returns Transform)
+            Transform projectileTransform = this.spawnInfo.Spawn(
+                this.transform,
+                this.prefabSpawnMe.transform,
+                this.spawnedObjectParent
+            );
+
+            GameObject projectile = projectileTransform.gameObject;
+
+            // Make projectile move up the Y axis
+            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = Vector2.up * projectileSpeed;
+            }
+
+            // Destroy projectile after lifetime
+            Destroy(projectile, projectileLifetime);
         }
-
-        // Original method left here for reference or reactivation later
-        // private void SpawnPrefab(InputAction.CallbackContext obj)
-        // {
-        //     if (this.prefabSpawnMe == null) return;
-        //     if (PauseManager.IsPaused) return;
-        //     if (!this.ShouldProcessInput) return;
-        //     if (IsGuiAction(obj)) return;
-
-        //     this.spawnInfo.Spawn(this.transform, this.prefabSpawnMe.transform, this.spawnedObjectParent);
-        // }
     }
 }
