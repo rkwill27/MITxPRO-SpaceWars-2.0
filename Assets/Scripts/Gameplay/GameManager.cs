@@ -11,6 +11,8 @@ namespace Scripts.Gameplay
 
         public int score;
 
+        // 🔹 Global flag for safe cleanup
+        public static bool IsQuittingOrRestarting = false;
 
         protected void Awake()
         {
@@ -28,22 +30,36 @@ namespace Scripts.Gameplay
         protected override void OnEnable()
         {
             base.OnEnable();
-            
+
             this.myPlayerInput.Meta.Enable();
             this.myPlayerInput.Meta.Restart.performed += ReloadScene;
         }
 
         private void ReloadScene(InputAction.CallbackContext obj)
         {
+            // ✅ Before reloading, mark game as restarting
+            IsQuittingOrRestarting = true;
             Helpers.GeneralHelpers.ReloadScene();
         }
-        
+
         protected override void OnDisable()
         {
             base.OnDisable();
-            
+
             this.myPlayerInput.Meta.Disable();
             this.myPlayerInput.Meta.Restart.performed -= ReloadScene;
+        }
+
+        private void OnApplicationQuit()
+        {
+            // ✅ Block pickups or spawns during quit
+            IsQuittingOrRestarting = true;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this) // only main instance
+                IsQuittingOrRestarting = true;
         }
 
         public void AddScore(int scoreValue)
@@ -51,7 +67,7 @@ namespace Scripts.Gameplay
             // Why put this in a function?
             //  Maybe we want to do something fancy with the score.
             //  Send an event to the UI to show an animation, maybe?
-            this.score += scoreValue; 
+            this.score += scoreValue;
         }
     }
 }

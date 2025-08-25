@@ -89,9 +89,12 @@ MonoBehaviour:
   moveSpeed: 3
   waitTimeAtPoints: 1
   smoothTime: 0.2
-  shouldDropItem: 1
+  projectilePrefab: {fileID: 0}
+  firePoint: {fileID: 0}
+  fireInterval: 2
+  shouldDropItem: 0
   itemsToDrop:
-  - itemPrefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+  - itemPrefab: {fileID: 0}
     dropChancePercent: 100
 --- !u!1 &2519725713663993314
 GameObject:
@@ -135,6 +138,7 @@ GameObject:
   - component: {fileID: 6291279485957521357}
   - component: {fileID: 3539578359544842106}
   - component: {fileID: 1876564629467352826}
+  - component: {fileID: 3253129101229091836}
   m_Layer: 16
   m_Name: 'PathingUFO '
   m_TagString: Untagged
@@ -204,6 +208,21 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 131072
   scoreValue: 10
+--- !u!114 &3253129101229091836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3254301336009348427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd87d8950bbc752459da8c616562258c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldDropItem: 1
+  dropChancePercent: 100
+  itemToDrop: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
 --- !u!1 &7933527746526124038
 GameObject:
   m_ObjectHideFlags: 0
