@@ -87,7 +87,7 @@ MonoBehaviour:
   patrolPoints: []
   randomizeAfterFirst: 0
   moveSpeed: 3
-  waitTimeAtPoints: 1
+  waitTimeAtPoints: 0.5
   smoothTime: 0.2
   projectilePrefab: {fileID: 0}
   firePoint: {fileID: 0}
@@ -221,7 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shouldDropItem: 1
-  dropChancePercent: 100
+  dropChancePercent: 50
   itemToDrop: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
 --- !u!1 &7933527746526124038
 GameObject:
