@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 4713840110795586676}
   - component: {fileID: 7781732902904990049}
   - component: {fileID: 4538731377129334578}
+  - component: {fileID: 1256260424218957198}
   - component: {fileID: 3680363602972354112}
   - component: {fileID: 3672465243552252630}
   - component: {fileID: 4101265669090732029}
+  - component: {fileID: 4175471358081426823}
   - component: {fileID: 1037364208866069336}
   - component: {fileID: 4811200028059484043}
   - component: {fileID: 1312182954531133005}
@@ -97,6 +99,24 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &1256260424218957198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375226088063364274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9cdcfc1fb27749449833236450dc4dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 0}
+  firePoint: {fileID: 0}
+  projectileSpeed: 10
+  projectileLifetime: 5
+  fireInterval: 0.25
+  cooldownImage: {fileID: 0}
 --- !u!114 &3680363602972354112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,6 +145,7 @@ MonoBehaviour:
   dashSpeed: 8
   dashLength: 0.5
   dashCooldown: 1
+  dashCooldownImage: {fileID: 0}
 --- !u!114 &4101265669090732029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +162,25 @@ MonoBehaviour:
   shieldCooldown: 5
   shieldTime: 2
   isShieldActive: 0
+  cooldownImage: {fileID: 0}
+--- !u!114 &4175471358081426823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375226088063364274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9cdcfc1fb27749449833236450dc4dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 0}
+  firePoint: {fileID: 0}
+  projectileSpeed: 10
+  projectileLifetime: 5
+  fireInterval: 0.25
+  cooldownImage: {fileID: 0}
 --- !u!114 &1037364208866069336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +213,9 @@ MonoBehaviour:
       max: 90
     extraScale: {x: 1, y: 1, z: 1}
   spawnInterval: 2
+  projectileSpeed: 10
+  projectileLifetime: 5
+  spawnCooldownImage: {fileID: 0}
 --- !u!114 &4811200028059484043
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,8 +1,9 @@
 ﻿using Scripts.Helpers;
 using Scripts.UI;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using System.Collections;
 
 namespace Scripts.Gameplay.PlayerInput
 {
@@ -23,6 +24,9 @@ namespace Scripts.Gameplay.PlayerInput
         [Tooltip("Seconds before projectile self-destructs")]
         public float projectileLifetime = 5f;
 
+        [Header("UI")]
+        public Image spawnCooldownImage; // UI cooldown indicator for spawns
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -33,7 +37,21 @@ namespace Scripts.Gameplay.PlayerInput
             base.OnDisable();
         }
 
-        private void Update()
+        // Hide inherited member instead of overriding
+        private new void Start()
+        {
+            // Prevent invisible first projectile firing on frame 0
+            spawnTimer = spawnInterval;
+
+            if (spawnCooldownImage != null)
+            {
+                spawnCooldownImage.gameObject.SetActive(false);
+                spawnCooldownImage.fillAmount = 0f;
+            }
+        }
+
+        // Hide inherited member instead of overriding
+        private new void Update()
         {
             if (PauseManager.IsPaused || !this.ShouldProcessInput) return;
 
@@ -42,6 +60,13 @@ namespace Scripts.Gameplay.PlayerInput
             {
                 SpawnPrefab();
                 spawnTimer = spawnInterval;
+
+                // Start cooldown indicator
+                if (spawnCooldownImage != null)
+                {
+                    spawnCooldownImage.gameObject.SetActive(true);
+                    StartCoroutine(ShrinkCooldownImage(spawnCooldownImage, spawnInterval));
+                }
             }
         }
 
@@ -49,24 +74,56 @@ namespace Scripts.Gameplay.PlayerInput
         {
             if (this.prefabSpawnMe == null) return;
 
-            // Spawn projectile (SpawnInfo returns Transform)
+            // Spawn projectile using SpawnInfo
             Transform projectileTransform = this.spawnInfo.Spawn(
                 this.transform,
                 this.prefabSpawnMe.transform,
                 this.spawnedObjectParent
             );
 
+            if (projectileTransform == null) return;
+
             GameObject projectile = projectileTransform.gameObject;
+
+            // Ensure projectile is active (fixes frame 0 invisibility)
+            projectile.SetActive(true);
+
+            // Enable all SpriteRenderers in this projectile, including children
+            foreach (SpriteRenderer sr in projectile.GetComponentsInChildren<SpriteRenderer>(true))
+            {
+                sr.enabled = true;
+            }
+
+            // Enable Animator if it exists
+            Animator animator = projectile.GetComponent<Animator>();
+            if (animator != null) animator.enabled = true;
 
             // Make projectile move up the Y axis
             Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
+                rb.simulated = true; // ensure physics is active
                 rb.velocity = Vector2.up * projectileSpeed;
             }
 
             // Destroy projectile after lifetime
             Destroy(projectile, projectileLifetime);
+        }
+
+        private IEnumerator ShrinkCooldownImage(Image img, float duration)
+        {
+            img.fillAmount = 1f;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                img.fillAmount = Mathf.Clamp01(1f - (elapsed / duration));
+                yield return null;
+            }
+
+            img.fillAmount = 0f;
+            img.gameObject.SetActive(false);
         }
     }
 }

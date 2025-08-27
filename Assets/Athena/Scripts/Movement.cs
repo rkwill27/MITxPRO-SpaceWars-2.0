@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
@@ -23,14 +23,22 @@ public class Movement : MonoBehaviour
     private Rigidbody2D theRB;
     private PlayerInvincibility invincibility;
 
+    [Header("UI")]
+    public Image dashCooldownImage; // UI cooldown indicator for dash
+
     void Start()
     {
         theRB = GetComponent<Rigidbody2D>();
         theRB.freezeRotation = true; // Lock rotation so the player doesn't spin
 
         invincibility = GetComponent<PlayerInvincibility>();
-    }
 
+        if (dashCooldownImage != null)
+        {
+            dashCooldownImage.gameObject.SetActive(false);
+            dashCooldownImage.fillAmount = 0f;
+        }
+    }
 
     void Update()
     {
@@ -45,7 +53,14 @@ public class Movement : MonoBehaviour
             dashCounter = dashLength;
             dashCooldownCounter = dashCooldown;
 
-            // Set invincible via shared manager
+            // Start cooldown image
+            if (dashCooldownImage != null)
+            {
+                dashCooldownImage.gameObject.SetActive(true);
+                StartCoroutine(ShrinkCooldownImage(dashCooldownImage, dashCooldown));
+            }
+
+            // Set invincible during dash
             if (invincibility != null)
             {
                 invincibility.SetInvincibleForDuration(dashLength);
@@ -67,11 +82,32 @@ public class Movement : MonoBehaviour
         if (dashCooldownCounter > 0)
         {
             dashCooldownCounter -= Time.deltaTime;
+
+            if (dashCooldownCounter <= 0 && dashCooldownImage != null)
+            {
+                dashCooldownImage.gameObject.SetActive(false);
+                dashCooldownImage.fillAmount = 0f;
+            }
         }
     }
 
     void FixedUpdate()
     {
         theRB.velocity = moveInput * activeMoveSpeed;
+    }
+
+    private IEnumerator ShrinkCooldownImage(Image img, float duration)
+    {
+        img.fillAmount = 1f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            img.fillAmount = Mathf.Clamp01(1f - (elapsed / duration));
+            yield return null;
+        }
+
+        img.fillAmount = 0f;
     }
 }
