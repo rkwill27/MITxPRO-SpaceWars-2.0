@@ -147,7 +147,8 @@ PrefabInstance:
       propertyPath: onKickAttempted.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6361210928453816926, guid: 1dd4d6a198a2aa7459f0d5237dc458d7, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1dd4d6a198a2aa7459f0d5237dc458d7, type: 3}
 --- !u!4 &6797293848531948531 stripped
 Transform:

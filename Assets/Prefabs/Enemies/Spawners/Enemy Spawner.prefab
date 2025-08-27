@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 849552846}
   m_Layer: 20
-  m_Name: Spawn Pont 4 (1)
+  m_Name: Spawn Pont 5
   m_TagString: Untagged
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 849552845}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.7, y: -8.06, z: 0}
+  m_LocalPosition: {x: 10.02, y: -8.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -121,11 +121,7 @@ MonoBehaviour:
       frequency: 1
     spawnPoints:
     - {fileID: 2296202822808125008}
-    patrolPoints:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    patrolPoints: []
     randomizeAfterFirst: 1
     moveSpeed: 4
     waitTimeAtPoints: 1

@@ -10,29 +10,41 @@ public class EnemySpawner : MonoBehaviour
     [Header("Spawn Waves")]
     public List<SpawnWave> spawnWaves = new List<SpawnWave>();
 
+    [Header("Spawner Settings")]
+    public bool allowWaveOverlap = true; // allow multiple waves to fire at once
+
     private int currentWaveIndex = 0;
-    private bool spawning = false;
 
     void Update()
     {
-        if (gameTimer == null || spawning) return;
+        if (gameTimer == null) return;
 
-        if (currentWaveIndex < spawnWaves.Count)
+        // Check waves until we reach one that shouldn't spawn yet
+        while (currentWaveIndex < spawnWaves.Count)
         {
             SpawnWave wave = spawnWaves[currentWaveIndex];
+
             if (gameTimer.elapsedTime >= wave.startTime)
             {
                 Debug.Log($"[Spawner] Starting wave {currentWaveIndex + 1} at {gameTimer.elapsedTime:F1}s");
                 StartCoroutine(SpawnWaveCoroutine(wave));
+
                 currentWaveIndex++;
+
+                // If overlap disabled only spawn one per frame
+                if (!allowWaveOverlap)
+                    break;
+            }
+            else
+            {
+                // Stop checking once we find a wave not ready yet
+                break;
             }
         }
     }
 
     IEnumerator SpawnWaveCoroutine(SpawnWave wave)
     {
-        spawning = true;
-
         for (int i = 0; i < wave.quantity; i++)
         {
             if (wave.wavePrefabs.Count == 0 || wave.spawnPoints.Count == 0)
@@ -54,30 +66,41 @@ public class EnemySpawner : MonoBehaviour
             {
                 if (wave.patrolPoints != null && wave.patrolPoints.Count > 0)
                 {
-                    // FIX: Convert List<Transform> to Transform[] for EnemyPathing
-                    pathing.patrolPoints = wave.patrolPoints.ToArray();
-                    Debug.Log($"[Spawner] Assigned {pathing.patrolPoints.Length} patrol points to {enemy.name}");
+                    // Copy & shuffle patrol points if requested
+                    List<Transform> patrolCopy = new List<Transform>(wave.patrolPoints);
+
+                    if (wave.randomizePatrolPoints)
+                    {
+                        for (int j = 0; j < patrolCopy.Count; j++)
+                        {
+                            int randIndex = Random.Range(j, patrolCopy.Count);
+                            (patrolCopy[j], patrolCopy[randIndex]) = (patrolCopy[randIndex], patrolCopy[j]);
+                        }
+                        Debug.Log($"[Spawner] Patrol points randomized for {enemy.name}");
+                    }
+
+                    pathing.Initialize(
+                        patrolCopy.ToArray(),
+                        wave.randomizeAfterFirst,
+                        wave.moveSpeed,
+                        wave.waitTimeAtPoints,
+                        wave.smoothTime
+                    );
+                    Debug.Log($"[Spawner] Initialized pathing with {patrolCopy.Count} patrol points for {enemy.name}");
                 }
                 else
                 {
                     Debug.LogWarning($"[Spawner] No patrol points assigned for {enemy.name}");
                 }
-
-                // Transfer movement settings
-                pathing.randomizeAfterFirst = wave.randomizeAfterFirst;
-                pathing.moveSpeed = wave.moveSpeed;
-                pathing.waitTimeAtPoints = wave.waitTimeAtPoints;
-                pathing.smoothTime = wave.smoothTime;
             }
             else
             {
                 Debug.LogWarning($"[Spawner] Spawned {enemy.name} but it has no EnemyPathing component!");
             }
 
+            // Small delay between enemies in the same wave
             yield return new WaitForSeconds(wave.spawnDelay);
         }
-
-        spawning = false;
     }
 }
 
@@ -97,7 +120,8 @@ public class SpawnWave
 
     [Header("Patrol Points")]
     public List<Transform> patrolPoints = new List<Transform>();
-    public bool randomizeAfterFirst = false;
+    public bool randomizePatrolPoints = false; // Shuffle order before assigning
+    public bool randomizeAfterFirst = false;   // Randomize after reaching first point
 
     [Header("Movement Settings")]
     public float moveSpeed = 3f;

@@ -45,13 +45,6 @@ public class EnemyPathing : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        isWaiting = false;
-
-        if (randomizeAfterFirst)
-        {
-            for (int i = 1; i < patrolPoints.Length; i++)
-                remainingPoints.Add(i);
-        }
     }
 
     void FixedUpdate()
@@ -60,6 +53,26 @@ public class EnemyPathing : MonoBehaviour
 
         HandleMovement();
         HandleFiring();
+    }
+
+    public void Initialize(Transform[] points, bool randomize, float speed, float waitTime, float smooth)
+    {
+        patrolPoints = points;
+        randomizeAfterFirst = randomize;
+        moveSpeed = speed;
+        waitTimeAtPoints = waitTime;
+        smoothTime = smooth;
+
+        currentPoint = 0;
+        remainingPoints.Clear();
+        firstPointReached = false;
+        isWaiting = false;
+
+        if (randomizeAfterFirst && patrolPoints.Length > 1)
+        {
+            for (int i = 1; i < patrolPoints.Length; i++)
+                remainingPoints.Add(i);
+        }
     }
 
     void HandleMovement()
