@@ -46,13 +46,16 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        // Update "AllEnemiesDestroyed" for active waves
+        // Clean destroyed enemies from global list
+        activeEnemies.RemoveAll(e => e == null);
+
+        // Update per-wave enemy states
         foreach (int waveIndex in currentWaveIndices)
         {
             SpawnWave wave = spawnWaves[waveIndex];
             if (wave.spawnedEnemies.Count > 0)
             {
-                wave.spawnedEnemies.RemoveAll(e => e == null);
+                wave.spawnedEnemies.RemoveAll(e => e == null); // Remove destroyed
                 wave.AllEnemiesDestroyed = wave.spawnedEnemies.Count == 0;
             }
         }
@@ -107,6 +110,7 @@ public class EnemySpawner : MonoBehaviour
         currentWaveIndices.Remove(waveIndex);
     }
 }
+
 
 
 

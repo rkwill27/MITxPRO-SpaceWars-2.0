@@ -1,4 +1,4 @@
-/* sing UnityEngine;
+using UnityEngine;
 
 public class WinManager : MonoBehaviour
 {
@@ -18,40 +18,30 @@ public class WinManager : MonoBehaviour
 
         if (winScreenUI != null)
             winScreenUI.SetActive(false);
-
-        enemySpawner.OnEnemiesChanged += CheckWinCondition;
     }
 
-    private void OnDestroy()
+    void Update()
     {
-        if (enemySpawner != null)
-            enemySpawner.OnEnemiesChanged -= CheckWinCondition;
-    }
+        if (winScreenShown || enemySpawner == null)
+            return;
 
-    private void CheckWinCondition()
-    {
-        if (winScreenShown) return;
+        // Check win condition: all waves have ended and all enemies destroyed
+        bool allWavesEnded = true;
+        bool allEnemiesDestroyed = true;
 
-        bool allWavesCompleted = true;
-        foreach (var wave in enemySpawner.activeWaves)
+        foreach (var wave in enemySpawner.spawnWaves)
         {
-            if (!wave.isCompleted)
-            {
-                allWavesCompleted = false;
-                break;
-            }
+            if (!wave.WaveEnded)
+                allWavesEnded = false;
+            if (!wave.AllEnemiesDestroyed)
+                allEnemiesDestroyed = false;
         }
 
-        if (allWavesCompleted)
+        if (allWavesEnded && allEnemiesDestroyed)
         {
-            if (winScreenUI != null)
-                winScreenUI.SetActive(true); // Show the win screen UI
-            Time.timeScale = 0f;
-            winScreenShown = true;
-            Debug.Log("[WinManager] Win screen activated!");
+            ShowWinScreen();
         }
     }
-
 
     private void ShowWinScreen()
     {
@@ -62,4 +52,4 @@ public class WinManager : MonoBehaviour
         winScreenShown = true;
         Debug.Log("[WinManager] Win screen activated!");
     }
-} */
+}
