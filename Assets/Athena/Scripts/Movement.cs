@@ -60,10 +60,11 @@ public class Movement : MonoBehaviour
                 StartCoroutine(ShrinkCooldownImage(dashCooldownImage, dashCooldown));
             }
 
-            // Set invincible during dash
+            // Set invincible during dash (no blinking)
             if (invincibility != null)
             {
-                invincibility.SetInvincibleForDuration(dashLength);
+                invincibility.SetInvincible(true);
+                StartCoroutine(EndDashInvincibility(dashLength));
             }
         }
 
@@ -109,5 +110,13 @@ public class Movement : MonoBehaviour
         }
 
         img.fillAmount = 0f;
+    }
+
+    // Helper to end invincibility after dash
+    private IEnumerator EndDashInvincibility(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        if (invincibility != null)
+            invincibility.SetInvincible(false);
     }
 }

@@ -34,7 +34,7 @@ namespace Scripts.Gameplay
         private Movement movementScript;
 
         private static bool applicationIsQuitting = false;
-        private bool isBeingDestroyed = false; // 🔥 NEW flag
+        private bool isBeingDestroyed = false; // NEW flag
 
         public bool IsAlive => currentHitPoints > 0;
 
@@ -74,7 +74,7 @@ namespace Scripts.Gameplay
 
         private void UpdateHitPointDisplay()
         {
-            // 🚫 Prevent creating icons during quit or destruction
+            // Prevent creating icons during quit or destruction
             if (applicationIsQuitting || isBeingDestroyed) return;
 
             ClearIcons();
@@ -116,7 +116,14 @@ namespace Scripts.Gameplay
 
         public void TakeDamage(float damage)
         {
-            if (applicationIsQuitting || isBeingDestroyed) return; // 🚫 Stop updates when quitting
+            if (applicationIsQuitting || isBeingDestroyed) return;
+
+            PlayerInvincibility invincibility = GetComponent<PlayerInvincibility>();
+            if (invincibility != null && invincibility.IsInvincible())
+            {
+                // Ignore damage while invincible
+                return;
+            }
 
             bool wasDead = !IsAlive;
 
@@ -135,6 +142,10 @@ namespace Scripts.Gameplay
                 if (IsAlive)
                 {
                     onDamaged.Invoke();
+
+                    // 🔥 Only blink when damaged
+                    if (invincibility != null)
+                        invincibility.TriggerInvincibility();
                 }
                 else
                 {
@@ -149,9 +160,11 @@ namespace Scripts.Gameplay
             currentHitPoints = Mathf.Clamp(currentHitPoints - (int)damage, 0, maxHitPoints);
         }
 
+
+
         public void HealPlayer(int healAmount)
         {
-            if (applicationIsQuitting || isBeingDestroyed) return; // 🚫 Stop updates when quitting
+            if (applicationIsQuitting || isBeingDestroyed) return; // Stop updates when quitting
 
             currentHitPoints = Mathf.Clamp(currentHitPoints + healAmount, 0, maxHitPoints);
             onHealed.Invoke();
@@ -160,11 +173,27 @@ namespace Scripts.Gameplay
 
         private IEnumerator HandleDeath()
         {
+            // Disable movement
             if (movementScript != null)
             {
                 movementScript.enabled = false;
             }
 
+            // Stop input if PlayerInput exists
+            var playerInput = GetComponent<UnityEngine.InputSystem.PlayerInput>();
+            if (playerInput != null)
+            {
+                playerInput.enabled = false;
+            }
+
+            // Stop projectile firing
+            var projectileSpawner = GetComponent<ProjectileSpawner>();
+            if (projectileSpawner != null)
+            {
+                projectileSpawner.enabled = false;
+            }
+
+            // Stop rigidbody physics
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             if (rb != null)
             {
@@ -172,8 +201,10 @@ namespace Scripts.Gameplay
                 rb.isKinematic = true;
             }
 
+            // Wait before final death actions
             yield return new WaitForSeconds(deathDelay);
 
+            // Show death screen
             if (deathScreenUI != null)
             {
                 deathScreenUI.SetActive(true);
@@ -183,7 +214,8 @@ namespace Scripts.Gameplay
                 Debug.LogWarning("Death screen UI is not assigned in Inspector.");
             }
 
-            Time.timeScale = 0f;
+            // Destroy player object after showing death screen
+            Destroy(gameObject);
         }
     }
 }
