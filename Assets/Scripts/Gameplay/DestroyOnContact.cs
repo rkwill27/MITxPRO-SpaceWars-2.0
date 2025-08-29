@@ -7,16 +7,23 @@ namespace Scripts.Gameplay
     {
         public LayerMask thingsThatKillMe;
         public int scoreValue;
-        
-        // It's possible to get two OnCollisionEnter2D events in a single frame, so we will use a flag to prevent scoring twice.
         protected bool isDoomed = false;
-    
+
+        [HideInInspector] public EnemySpawner spawner;
+        [HideInInspector] public SpawnWave wave;
+
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (this.isDoomed) return;
+            if (isDoomed) return;
             if (!GeneralHelpers.IsInMask(this.thingsThatKillMe, other.gameObject)) return;
-            
-            this.isDoomed = true;
+
+            isDoomed = true;
+
+            if (spawner != null)
+            {
+                spawner.RemoveEnemy(this.gameObject, wave);
+            }
+
             Destroy(this.gameObject);
 
             if (GameManager.Instance)

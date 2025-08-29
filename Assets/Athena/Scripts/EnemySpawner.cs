@@ -1,3 +1,4 @@
+using Scripts.Gameplay;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class EnemySpawner : MonoBehaviour
     public List<int> currentWaveIndices = new List<int>();
 
     private int nextWaveIndex = 0;
-    public int NextWaveIndex => nextWaveIndex; // Public getter
+    public int NextWaveIndex => nextWaveIndex;
 
     void Update()
     {
@@ -46,19 +47,8 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        // Clean destroyed enemies from global list
-        activeEnemies.RemoveAll(e => e == null);
-
-        // Update per-wave enemy states
-        foreach (int waveIndex in currentWaveIndices)
-        {
-            SpawnWave wave = spawnWaves[waveIndex];
-            if (wave.spawnedEnemies.Count > 0)
-            {
-                wave.spawnedEnemies.RemoveAll(e => e == null); // Remove destroyed
-                wave.AllEnemiesDestroyed = wave.spawnedEnemies.Count == 0;
-            }
-        }
+        // Clean destroyed/null enemies from global list
+        activeEnemies.RemoveAll(e => e == null || e.Equals(null));
     }
 
     IEnumerator SpawnWaveCoroutine(int waveIndex, SpawnWave wave)
@@ -76,10 +66,26 @@ public class EnemySpawner : MonoBehaviour
 
             GameObject enemy = Instantiate(selectedPrefab, chosenPoint.position, chosenPoint.rotation);
             activeEnemies.Add(enemy);
-            wave.spawnedEnemies.Add(enemy); // Track enemy for this wave
-            Debug.Log($"[Spawner] Spawned {enemy.name} at {chosenPoint.position}");
+            wave.spawnedEnemies.Add(enemy);
+
+            // Hook enemy to spawner and wave for immediate removal on death
+            DestroyOnContact doc = enemy.GetComponent<DestroyOnContact>();
+            if (doc != null)
+            {
+                doc.spawner = this;
+                doc.wave = wave;
+            }
 
             EnemyPathing pathing = enemy.GetComponent<EnemyPathing>();
+            if (pathing != null)
+            {
+                pathing.spawner = this;
+                pathing.wave = wave;
+            }
+
+            Debug.Log($"[Spawner] Spawned {enemy.name} at {chosenPoint.position}");
+
+            // Assign path movement if available
             if (pathing != null && wave.patrolPoints.Count > 0)
             {
                 List<Transform> patrolCopy = new List<Transform>(wave.patrolPoints);
@@ -108,12 +114,28 @@ public class EnemySpawner : MonoBehaviour
         // Mark wave as ended after all enemies spawned
         wave.WaveEnded = true;
         currentWaveIndices.Remove(waveIndex);
+        Debug.Log($"[Spawner] Wave {waveIndex} ended. WaveEnded = {wave.WaveEnded}");
+    }
+
+    /// <summary>
+    /// Removes an enemy from active lists immediately when it dies
+    /// </summary>
+    public void RemoveEnemy(GameObject enemy, SpawnWave wave)
+    {
+        if (enemy == null) return;
+
+        if (activeEnemies.Contains(enemy))
+            activeEnemies.Remove(enemy);
+
+        if (wave != null && wave.spawnedEnemies.Contains(enemy))
+            wave.spawnedEnemies.Remove(enemy);
+
+        if (wave != null)
+            wave.AllEnemiesDestroyed = wave.spawnedEnemies.Count == 0;
+
+        Debug.Log($"[Spawner] Enemy {enemy?.name} removed. Wave AllEnemiesDestroyed = {wave?.AllEnemiesDestroyed}");
     }
 }
-
-
-
-
 
 [System.Serializable]
 public class SpawnWave
@@ -140,9 +162,9 @@ public class SpawnWave
     public float smoothTime = 0.2f;
 
     [Header("Wave Status Tracking")]
-    public bool WaveEnded = false;            // True when all enemies for this wave have spawned
-    public bool AllEnemiesDestroyed = false;  // True when all spawned enemies are destroyed
-    [HideInInspector] public List<GameObject> spawnedEnemies = new List<GameObject>();
+    public bool WaveEnded = false;
+    public bool AllEnemiesDestroyed = false;
+    public List<GameObject> spawnedEnemies = new List<GameObject>();
 
     public GameObject GetRandomPrefab()
     {

@@ -5,13 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyPathing : MonoBehaviour
 {
+    [Header("Spawner Reference (assigned at spawn)")]
+    [HideInInspector] public EnemySpawner spawner;
+    [HideInInspector] public SpawnWave wave;
+
     [Header("Path Settings")]
     public Transform[] patrolPoints;
     private int currentPoint = 0;
     private List<int> remainingPoints = new List<int>();
     private bool firstPointReached = false;
-
-    [Tooltip("Randomize patrol after first point is reached")]
     public bool randomizeAfterFirst = false;
 
     [Header("Movement Settings")]
@@ -19,7 +21,6 @@ public class EnemyPathing : MonoBehaviour
     public float waitTimeAtPoints = 1f;
     private float waitTimer = 0f;
     private bool isWaiting = false;
-
     public float smoothTime = 0.2f;
     private Vector2 velocitySmoothing;
 
@@ -33,7 +34,7 @@ public class EnemyPathing : MonoBehaviour
     public class ItemDrop
     {
         public GameObject itemPrefab;
-        [Range(0f, 100f)] public float dropChancePercent; // e.g., 25 = 25% chance
+        [Range(0f, 100f)] public float dropChancePercent;
     }
 
     [Header("Pickups")]
@@ -41,6 +42,7 @@ public class EnemyPathing : MonoBehaviour
     public ItemDrop[] itemsToDrop;
 
     private Rigidbody2D rb;
+    private static bool applicationIsQuitting = false;
 
     void Start()
     {
@@ -50,7 +52,6 @@ public class EnemyPathing : MonoBehaviour
     void FixedUpdate()
     {
         if (patrolPoints == null || patrolPoints.Length == 0) return;
-
         HandleMovement();
         HandleFiring();
     }
@@ -158,14 +159,22 @@ public class EnemyPathing : MonoBehaviour
 
     void OnDestroy()
     {
-        if (Application.isPlaying && !applicationIsQuitting && shouldDropItem && itemsToDrop.Length > 0)
+        if (applicationIsQuitting || !Application.isPlaying) return;
+
+        // Cleanup in spawner
+        if (spawner != null && wave != null)
+        {
+            spawner.RemoveEnemy(gameObject, wave);
+            Debug.Log($"[EnemyPathing] {gameObject.name} destroyed and removed from wave.");
+        }
+
+        // Handle item drops
+        if (shouldDropItem && itemsToDrop.Length > 0)
         {
             foreach (ItemDrop drop in itemsToDrop)
             {
                 if (drop.itemPrefab == null) continue;
-
                 float roll = Random.Range(0f, 100f);
-
                 if (roll <= drop.dropChancePercent)
                 {
                     Instantiate(drop.itemPrefab, transform.position, Quaternion.identity);
@@ -173,9 +182,6 @@ public class EnemyPathing : MonoBehaviour
             }
         }
     }
-
-    // Add this static flag at the top of the class
-    private static bool applicationIsQuitting = false;
 
     private void OnApplicationQuit()
     {

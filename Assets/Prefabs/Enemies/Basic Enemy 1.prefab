@@ -84,13 +84,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2204f91eb555674599a662ca036b59f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawner: {fileID: 0}
+  wave:
+    startTime: 0
+    quantity: 3
+    spawnDelay: 0.5
+    wavePrefabs: []
+    spawnPoints: []
+    patrolPoints: []
+    randomizePatrolPoints: 0
+    randomizeAfterFirst: 0
+    moveSpeed: 3
+    waitTimeAtPoints: 1
+    smoothTime: 0.2
+    WaveEnded: 0
+    AllEnemiesDestroyed: 0
+    spawnedEnemies: []
   patrolPoints: []
   randomizeAfterFirst: 0
   moveSpeed: 3
   waitTimeAtPoints: 0.5
   smoothTime: 0.2
-  projectilePrefab: {fileID: 0}
-  firePoint: {fileID: 0}
+  projectilePrefab: {fileID: 6115614045583681578, guid: bd8545cd1ca55634088f72a59b12a136, type: 3}
+  firePoint: {fileID: 8956839656840082998}
   fireInterval: 2
   shouldDropItem: 0
   itemsToDrop:
@@ -208,6 +224,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 131072
   scoreValue: 10
+  spawner: {fileID: 0}
+  wave:
+    startTime: 0
+    quantity: 3
+    spawnDelay: 0.5
+    wavePrefabs: []
+    spawnPoints: []
+    patrolPoints: []
+    randomizePatrolPoints: 0
+    randomizeAfterFirst: 0
+    moveSpeed: 3
+    waitTimeAtPoints: 1
+    smoothTime: 0.2
+    WaveEnded: 0
+    AllEnemiesDestroyed: 0
+    spawnedEnemies: []
 --- !u!114 &3253129101229091836
 MonoBehaviour:
   m_ObjectHideFlags: 0

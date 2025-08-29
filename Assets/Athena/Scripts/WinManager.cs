@@ -22,19 +22,15 @@ public class WinManager : MonoBehaviour
 
     void Update()
     {
-        if (winScreenShown || enemySpawner == null)
-            return;
+        if (winScreenShown || enemySpawner == null) return;
 
-        // Check win condition: all waves have ended and all enemies destroyed
         bool allWavesEnded = true;
         bool allEnemiesDestroyed = true;
 
         foreach (var wave in enemySpawner.spawnWaves)
         {
-            if (!wave.WaveEnded)
-                allWavesEnded = false;
-            if (!wave.AllEnemiesDestroyed)
-                allEnemiesDestroyed = false;
+            if (!wave.WaveEnded) allWavesEnded = false;
+            if (!wave.AllEnemiesDestroyed) allEnemiesDestroyed = false;
         }
 
         if (allWavesEnded && allEnemiesDestroyed)
