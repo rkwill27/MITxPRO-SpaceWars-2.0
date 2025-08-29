@@ -174,10 +174,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72fabd02da540b7459650010dc8a3017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuMusic: {fileID: 0}
-  battleSelectMusic: {fileID: 0}
+  menuMusic: {fileID: 255801874201016899}
   bgm:
-  - {fileID: 0}
+  - {fileID: 8370764601890761807}
+  - {fileID: 6213680521529253439}
+  - {fileID: 2498585155919670317}
+  - {fileID: 2491242255815932784}
   sfx: []
 --- !u!1 &1989558663053392541
 GameObject:

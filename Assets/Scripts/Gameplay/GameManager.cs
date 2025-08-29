@@ -41,7 +41,7 @@ namespace Scripts.Gameplay
 
         private void ReloadScene(InputAction.CallbackContext obj)
         {
-            // ✅ Before reloading, mark game as restarting
+            // Before reloading, mark game as restarting
             IsQuittingOrRestarting = true;
             Helpers.GeneralHelpers.ReloadScene();
         }
@@ -56,7 +56,7 @@ namespace Scripts.Gameplay
 
         private void OnApplicationQuit()
         {
-            // ✅ Block pickups or spawns during quit
+            // Block pickups or spawns during quit
             IsQuittingOrRestarting = true;
         }
 
