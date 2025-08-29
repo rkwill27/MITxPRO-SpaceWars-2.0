@@ -66,6 +66,8 @@ public class Movement : MonoBehaviour
                 invincibility.SetInvincible(true);
                 StartCoroutine(EndDashInvincibility(dashLength));
             }
+
+            AudioManager.instance.PlaySFX(4);
         }
 
         // Dash countdown

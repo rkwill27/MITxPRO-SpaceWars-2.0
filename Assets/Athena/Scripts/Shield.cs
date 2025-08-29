@@ -43,6 +43,8 @@ public class Shield : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && shieldCooldownTimer <= 0f && !isShieldActive)
         {
             StartCoroutine(ActivateShield());
+
+            AudioManager.instance.PlaySFX(2);
         }
     }
 

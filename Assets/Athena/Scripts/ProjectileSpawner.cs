@@ -82,6 +82,8 @@ public class ProjectileSpawner : MonoBehaviour
         }
 
         behavior.Initialize(Vector2.up, projectileSpeed, projectileLifetime);
+
+        AudioManager.instance.PlaySFX(6);
     }
 
 
