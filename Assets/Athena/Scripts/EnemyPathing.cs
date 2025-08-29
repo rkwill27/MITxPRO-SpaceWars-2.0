@@ -2,189 +2,114 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyPathing : MonoBehaviour
 {
-    [Header("Spawner Reference (assigned at spawn)")]
+    [Header("Spawner References (assigned at spawn)")]
     [HideInInspector] public EnemySpawner spawner;
     [HideInInspector] public SpawnWave wave;
 
-    [Header("Path Settings")]
-    public Transform[] patrolPoints;
-    private int currentPoint = 0;
-    private List<int> remainingPoints = new List<int>();
-    private bool firstPointReached = false;
-    public bool randomizeAfterFirst = false;
+    [Header("Pathing Settings")]
+    private Transform[] patrolPoints;
+    private int currentPointIndex = 0;
+    private bool randomizeAfterFirst;
+    private float moveSpeed;
+    private float waitTimeAtPoints;
+    private float smoothTime;
 
-    [Header("Movement Settings")]
-    public float moveSpeed = 3f;
-    public float waitTimeAtPoints = 1f;
-    private float waitTimer = 0f;
+    private Vector3 velocity = Vector3.zero;
     private bool isWaiting = false;
-    public float smoothTime = 0.2f;
-    private Vector2 velocitySmoothing;
 
-    [Header("Projectile Settings")]
-    public GameObject projectilePrefab;
+    [Header("Firing Settings")]
+    public GameObject bulletPrefab;
     public Transform firePoint;
-    public float fireInterval = 2f;
-    private float fireTimer = 0f;
+    public float fireRate = 1.5f;
+    private float fireCooldown = 0f;
 
-    [System.Serializable]
-    public class ItemDrop
+    private void Update()
     {
-        public GameObject itemPrefab;
-        [Range(0f, 100f)] public float dropChancePercent;
-    }
-
-    [Header("Pickups")]
-    public bool shouldDropItem;
-    public ItemDrop[] itemsToDrop;
-
-    private Rigidbody2D rb;
-    private static bool applicationIsQuitting = false;
-
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
-
-    void FixedUpdate()
-    {
-        if (patrolPoints == null || patrolPoints.Length == 0) return;
         HandleMovement();
         HandleFiring();
     }
 
-    public void Initialize(Transform[] points, bool randomize, float speed, float waitTime, float smooth)
+    private void HandleMovement()
     {
-        patrolPoints = points;
-        randomizeAfterFirst = randomize;
-        moveSpeed = speed;
-        waitTimeAtPoints = waitTime;
-        smoothTime = smooth;
+        if (patrolPoints == null || patrolPoints.Length == 0 || isWaiting) return;
 
-        currentPoint = 0;
-        remainingPoints.Clear();
-        firstPointReached = false;
-        isWaiting = false;
+        Transform targetPoint = patrolPoints[currentPointIndex];
+        if (targetPoint == null) return;
 
-        if (randomizeAfterFirst && patrolPoints.Length > 1)
+        transform.position = Vector3.SmoothDamp(
+            transform.position,
+            targetPoint.position,
+            ref velocity,
+            smoothTime,
+            moveSpeed
+        );
+
+        if (Vector3.Distance(transform.position, targetPoint.position) < 0.1f)
         {
-            for (int i = 1; i < patrolPoints.Length; i++)
-                remainingPoints.Add(i);
+            StartCoroutine(WaitAndMoveNext());
         }
     }
 
-    void HandleMovement()
+    private IEnumerator WaitAndMoveNext()
     {
-        if (isWaiting)
+        isWaiting = true;
+        yield return new WaitForSeconds(waitTimeAtPoints);
+
+        if (randomizeAfterFirst)
+            currentPointIndex = Random.Range(0, patrolPoints.Length);
+        else
+            currentPointIndex = (currentPointIndex + 1) % patrolPoints.Length;
+
+        isWaiting = false;
+    }
+
+    private void HandleFiring()
+    {
+        if (bulletPrefab == null || firePoint == null) return;
+
+        fireCooldown -= Time.deltaTime;
+        if (fireCooldown <= 0f)
         {
-            waitTimer -= Time.fixedDeltaTime;
-            if (waitTimer <= 0f)
-            {
-                isWaiting = false;
-
-                if (randomizeAfterFirst && firstPointReached && remainingPoints.Count > 0)
-                {
-                    int nextIndex = Random.Range(0, remainingPoints.Count);
-                    currentPoint = remainingPoints[nextIndex];
-                    remainingPoints.RemoveAt(nextIndex);
-
-                    if (remainingPoints.Count == 0)
-                    {
-                        for (int i = 1; i < patrolPoints.Length; i++)
-                            remainingPoints.Add(i);
-                    }
-                }
-                else
-                {
-                    currentPoint = (currentPoint + 1) % patrolPoints.Length;
-                }
-            }
-
-            rb.velocity = Vector2.zero;
-            return;
+            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            fireCooldown = fireRate;
         }
+    }
 
-        Vector2 targetPos = patrolPoints[currentPoint].position;
-        float distance = Vector2.Distance(rb.position, targetPos);
+    public void Initialize(
+        Transform[] patrolPoints,
+        bool randomizeAfterFirst,
+        float moveSpeed,
+        float waitTimeAtPoints,
+        float smoothTime
+    )
+    {
+        this.patrolPoints = patrolPoints;
+        this.randomizeAfterFirst = randomizeAfterFirst;
+        this.moveSpeed = moveSpeed;
+        this.waitTimeAtPoints = waitTimeAtPoints;
+        this.smoothTime = smoothTime;
 
-        if (distance > 0.1f)
+        if (patrolPoints != null && patrolPoints.Length > 0)
+            currentPointIndex = 0;
+    }
+
+    private void OnDestroy()
+    {
+        if (!Application.isPlaying) return;
+
+        // Use the ROOT object for removal
+        GameObject root = gameObject != null ? gameObject.transform.root.gameObject : null;
+
+        if (spawner != null && wave != null && root != null)
         {
-            Vector2 direction = (targetPos - rb.position).normalized;
-            Vector2 desiredVelocity = direction * moveSpeed;
-            rb.velocity = Vector2.SmoothDamp(rb.velocity, desiredVelocity, ref velocitySmoothing, smoothTime);
-
-            if (direction.x != 0)
-                transform.localScale = new Vector3(direction.x < 0 ? 1f : -1f, 1f, 1f);
+            Debug.Log($"[EnemyPathing.OnDestroy] Destroyed {root.name} (ID:{root.GetInstanceID()}) | Wave:{wave.WaveName} | Removing from spawner");
+            spawner.RemoveEnemy(root, wave);
         }
         else
         {
-            rb.velocity = Vector2.zero;
-            isWaiting = true;
-            waitTimer = waitTimeAtPoints;
-
-            if (!firstPointReached)
-                firstPointReached = true;
+            Debug.LogWarning($"[EnemyPathing.OnDestroy] Missing references or root. spawnerNull:{spawner == null}, waveNull:{wave == null}, rootNull:{root == null}");
         }
-    }
-
-    void HandleFiring()
-    {
-        fireTimer -= Time.fixedDeltaTime;
-        if (fireTimer <= 0f && projectilePrefab != null && firePoint != null)
-        {
-            Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-            fireTimer = fireInterval;
-        }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        if (patrolPoints != null && patrolPoints.Length > 1)
-        {
-            for (int i = 0; i < patrolPoints.Length; i++)
-            {
-                if (patrolPoints[i] != null)
-                {
-                    Gizmos.DrawSphere(patrolPoints[i].position, 0.2f);
-                    if (i < patrolPoints.Length - 1 && patrolPoints[i + 1] != null)
-                        Gizmos.DrawLine(patrolPoints[i].position, patrolPoints[i + 1].position);
-                }
-            }
-        }
-    }
-
-    void OnDestroy()
-    {
-        if (applicationIsQuitting || !Application.isPlaying) return;
-
-        // Cleanup in spawner
-        if (spawner != null && wave != null)
-        {
-            spawner.RemoveEnemy(gameObject, wave);
-            Debug.Log($"[EnemyPathing] {gameObject.name} destroyed and removed from wave.");
-        }
-
-        // Handle item drops
-        if (shouldDropItem && itemsToDrop.Length > 0)
-        {
-            foreach (ItemDrop drop in itemsToDrop)
-            {
-                if (drop.itemPrefab == null) continue;
-                float roll = Random.Range(0f, 100f);
-                if (roll <= drop.dropChancePercent)
-                {
-                    Instantiate(drop.itemPrefab, transform.position, Quaternion.identity);
-                }
-            }
-        }
-    }
-
-    private void OnApplicationQuit()
-    {
-        applicationIsQuitting = true;
     }
 }

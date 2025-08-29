@@ -15,7 +15,7 @@ public class EnemySpawner : MonoBehaviour
     public bool allowWaveOverlap = true;
 
     [Header("Runtime Tracking")]
-    public List<GameObject> activeEnemies = new List<GameObject>();
+    public List<GameObject> activeEnemies = new List<GameObject>();   // ALWAYS track the ROOT enemy object here
     public List<int> currentWaveIndices = new List<int>();
 
     private int nextWaveIndex = 0;
@@ -32,23 +32,22 @@ public class EnemySpawner : MonoBehaviour
 
             if (gameTimer.elapsedTime >= wave.startTime)
             {
-                Debug.Log($"[Spawner] Starting wave {nextWaveIndex + 1} at {gameTimer.elapsedTime:F1}s");
+                Debug.Log($"[Spawner] Starting wave {nextWaveIndex + 1} ({wave.WaveName}) at {gameTimer.elapsedTime:F1}s");
                 StartCoroutine(SpawnWaveCoroutine(nextWaveIndex, wave));
 
                 currentWaveIndices.Add(nextWaveIndex);
                 nextWaveIndex++;
 
-                if (!allowWaveOverlap)
-                    break;
+                if (!allowWaveOverlap) break;
             }
-            else
-            {
-                break;
-            }
+            else break;
         }
 
-        // Clean destroyed/null enemies from global list
+        // Safety cleanup
+        int before = activeEnemies.Count;
         activeEnemies.RemoveAll(e => e == null || e.Equals(null));
+        if (before != activeEnemies.Count)
+            Debug.Log($"[Spawner] Cleaned {before - activeEnemies.Count} null enemies. Remaining: {activeEnemies.Count}");
     }
 
     IEnumerator SpawnWaveCoroutine(int waveIndex, SpawnWave wave)
@@ -64,28 +63,28 @@ public class EnemySpawner : MonoBehaviour
             GameObject selectedPrefab = wave.GetRandomPrefab();
             Transform chosenPoint = wave.spawnPoints[Random.Range(0, wave.spawnPoints.Count)];
 
-            GameObject enemy = Instantiate(selectedPrefab, chosenPoint.position, chosenPoint.rotation);
-            activeEnemies.Add(enemy);
-            wave.spawnedEnemies.Add(enemy);
+            // Instantiate the ROOT enemy object
+            GameObject rootEnemy = Instantiate(selectedPrefab, chosenPoint.position, chosenPoint.rotation);
 
-            // Hook enemy to spawner and wave for immediate removal on death
-            DestroyOnContact doc = enemy.GetComponent<DestroyOnContact>();
-            if (doc != null)
-            {
-                doc.spawner = this;
-                doc.wave = wave;
-            }
+            // Track the ROOT enemy in both lists
+            activeEnemies.Add(rootEnemy);
+            wave.spawnedEnemies.Add(rootEnemy);
 
-            EnemyPathing pathing = enemy.GetComponent<EnemyPathing>();
+            // Find EnemyPathing even if it's on a child and assign refs
+            EnemyPathing pathing = rootEnemy.GetComponentInChildren<EnemyPathing>(true);
             if (pathing != null)
             {
                 pathing.spawner = this;
                 pathing.wave = wave;
             }
+            else
+            {
+                Debug.LogWarning($"[Spawner] EnemyPathing not found on {rootEnemy.name} or its children. Removal on death may not call back.");
+            }
 
-            Debug.Log($"[Spawner] Spawned {enemy.name} at {chosenPoint.position}");
+            Debug.Log($"[Spawner] Spawned {rootEnemy.name} (ID:{rootEnemy.GetInstanceID()}) at {chosenPoint.position} (Wave: {wave.WaveName})");
 
-            // Assign path movement if available
+            // Initialize movement if available
             if (pathing != null && wave.patrolPoints.Count > 0)
             {
                 List<Transform> patrolCopy = new List<Transform>(wave.patrolPoints);
@@ -111,35 +110,44 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitForSeconds(wave.spawnDelay);
         }
 
-        // Mark wave as ended after all enemies spawned
         wave.WaveEnded = true;
         currentWaveIndices.Remove(waveIndex);
-        Debug.Log($"[Spawner] Wave {waveIndex} ended. WaveEnded = {wave.WaveEnded}");
+        Debug.Log($"[Spawner] Wave {waveIndex} ({wave.WaveName}) ended. WaveEnded = {wave.WaveEnded}");
     }
 
     /// <summary>
-    /// Removes an enemy from active lists immediately when it dies
+    /// Called when an enemy dies. Removes the ROOT enemy object from global and wave lists.
     /// </summary>
-    public void RemoveEnemy(GameObject enemy, SpawnWave wave)
+    public void RemoveEnemy(GameObject enemyRoot, SpawnWave wave)
     {
-        if (enemy == null) return;
+        // Make sure we use the root object for tracking/removal
+        if (enemyRoot != null)
+            enemyRoot = enemyRoot.transform.root.gameObject;
 
-        if (activeEnemies.Contains(enemy))
-            activeEnemies.Remove(enemy);
+        string enemyLabel = enemyRoot != null ? $"{enemyRoot.name} (ID:{enemyRoot.GetInstanceID()})" : "NULL";
+        Debug.Log($"[Spawner.RemoveEnemy] Called for {enemyLabel} | Wave={(wave != null ? wave.WaveName : "NULL")}");
 
-        if (wave != null && wave.spawnedEnemies.Contains(enemy))
-            wave.spawnedEnemies.Remove(enemy);
+        bool removedFromActive = activeEnemies.Remove(enemyRoot);
+        bool removedFromWave = false;
 
         if (wave != null)
+        {
+            removedFromWave = wave.spawnedEnemies.Remove(enemyRoot);
             wave.AllEnemiesDestroyed = wave.spawnedEnemies.Count == 0;
+        }
 
-        Debug.Log($"[Spawner] Enemy {enemy?.name} removed. Wave AllEnemiesDestroyed = {wave?.AllEnemiesDestroyed}");
+        Debug.Log($"[Spawner.RemoveEnemy] removedFromActive={removedFromActive}, removedFromWave={removedFromWave}, " +
+                  $"activeLeft={activeEnemies.Count}, inWaveLeft={(wave != null ? wave.spawnedEnemies.Count : 0)}, " +
+                  $"WaveDestroyed={(wave != null ? wave.AllEnemiesDestroyed : false)}");
     }
 }
 
 [System.Serializable]
 public class SpawnWave
 {
+    [Header("Wave Info")]
+    public string WaveName = "Wave";
+
     [Header("Timing")]
     public float startTime = 0f;
     public int quantity = 3;
