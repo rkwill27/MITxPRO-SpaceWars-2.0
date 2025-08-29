@@ -82,7 +82,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameTimer: {fileID: 0}
   spawnWaves:
-  - startTime: 3
+  - WaveName: Wave
+    startTime: 3
     quantity: 10
     spawnDelay: 2
     wavePrefabs:
@@ -100,7 +101,11 @@ MonoBehaviour:
     moveSpeed: 3
     waitTimeAtPoints: 1
     smoothTime: 1
-  - startTime: 30
+    WaveEnded: 0
+    AllEnemiesDestroyed: 0
+    spawnedEnemies: []
+  - WaveName: Wave
+    startTime: 30
     quantity: 7
     spawnDelay: 3
     wavePrefabs:
@@ -116,7 +121,11 @@ MonoBehaviour:
     moveSpeed: 3
     waitTimeAtPoints: 2
     smoothTime: 1
-  - startTime: 40
+    WaveEnded: 0
+    AllEnemiesDestroyed: 0
+    spawnedEnemies: []
+  - WaveName: Wave
+    startTime: 40
     quantity: 7
     spawnDelay: 3
     wavePrefabs:
@@ -132,7 +141,11 @@ MonoBehaviour:
     moveSpeed: 3
     waitTimeAtPoints: 2
     smoothTime: 1
-  - startTime: 50
+    WaveEnded: 0
+    AllEnemiesDestroyed: 0
+    spawnedEnemies: []
+  - WaveName: Wave
+    startTime: 50
     quantity: 7
     spawnDelay: 3
     wavePrefabs:
@@ -152,7 +165,11 @@ MonoBehaviour:
     moveSpeed: 3
     waitTimeAtPoints: 2
     smoothTime: 1
-  - startTime: 80
+    WaveEnded: 0
+    AllEnemiesDestroyed: 0
+    spawnedEnemies: []
+  - WaveName: Wave
+    startTime: 80
     quantity: 12
     spawnDelay: 4
     wavePrefabs:
@@ -174,7 +191,11 @@ MonoBehaviour:
     moveSpeed: 3
     waitTimeAtPoints: 4
     smoothTime: 1
-  - startTime: 80
+    WaveEnded: 0
+    AllEnemiesDestroyed: 0
+    spawnedEnemies: []
+  - WaveName: Wave
+    startTime: 80
     quantity: 12
     spawnDelay: 5
     wavePrefabs:
@@ -196,7 +217,12 @@ MonoBehaviour:
     moveSpeed: 3
     waitTimeAtPoints: 4
     smoothTime: 1
+    WaveEnded: 0
+    AllEnemiesDestroyed: 0
+    spawnedEnemies: []
   allowWaveOverlap: 1
+  activeEnemies: []
+  currentWaveIndices: 
 --- !u!1 &5528953094738651919
 GameObject:
   m_ObjectHideFlags: 0
