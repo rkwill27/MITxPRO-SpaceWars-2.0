@@ -107,9 +107,9 @@ public class EnemyPathing : MonoBehaviour
             Debug.Log($"[EnemyPathing.OnDestroy] Destroyed {root.name} (ID:{root.GetInstanceID()}) | Wave:{wave.WaveName} | Removing from spawner");
             spawner.RemoveEnemy(root, wave);
         }
-        else
+        /* else
         {
             Debug.LogWarning($"[EnemyPathing.OnDestroy] Missing references or root. spawnerNull:{spawner == null}, waveNull:{wave == null}, rootNull:{root == null}");
-        }
+        } */
     }
 }

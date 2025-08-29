@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Scripts.Gameplay
 {
@@ -8,39 +9,60 @@ namespace Scripts.Gameplay
         public int healAmount = 1;
         public AudioClip pickupSound;
 
-        private static bool applicationIsQuitting = false;
+        // Global guards
+        private static bool isQuitting = false;
+        private static bool isSceneUnloading = false;
 
-        private void OnApplicationQuit()
+        private void OnEnable()
         {
-            applicationIsQuitting = true;
+            // Subscribe once per domain reload; static flags cover restarts
+            Application.quitting += HandleQuitting;
+            SceneManager.sceneUnloaded += HandleSceneUnloaded;
         }
 
         private void OnDisable()
         {
-            // If Unity is quitting, destroy immediately to prevent leftover objects
-            if (applicationIsQuitting && gameObject != null)
-            {
-                DestroyImmediate(gameObject);
-            }
+            // No cleanup or destroy calls here; Unity is handling teardown.
+        }
+
+        private void OnDestroy()
+        {
+            // Absolutely do NOT spawn anything here.
+            // (No particles, sounds, new pickups, etc.)
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (applicationIsQuitting) return;
+            // If the app is quitting or the scene is unloading, do nothing.
+            if (isQuitting || isSceneUnloading) return;
 
             HitPoints playerHealth = other.GetComponent<HitPoints>();
-
             if (playerHealth != null && playerHealth.IsAlive)
             {
                 playerHealth.HealPlayer(healAmount);
 
-                if (pickupSound != null)
+                // Avoid PlayClipAtPoint (spawns a temp GO). Route through AudioManager instead.
+                if (pickupSound != null && AudioManager.instance != null)
                 {
-                    AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+                    // Implement PlaySFXOneShot in your AudioManager to call an AudioSource.PlayOneShot
+                    // on a persistent (DontDestroyOnLoad) AudioSource without spawning new GameObjects.
+                    // AudioManager.instance.PlaySFXOneShot(pickupSound);
                 }
 
+                // Safe during runtime; Unity handles this on scene unload anyway.
                 Destroy(gameObject);
             }
+        }
+
+        private void HandleQuitting()
+        {
+            isQuitting = true;
+        }
+
+        private void HandleSceneUnloaded(Scene _)
+        {
+            // This fires during scene restart/transition
+            isSceneUnloading = true;
         }
     }
 }
