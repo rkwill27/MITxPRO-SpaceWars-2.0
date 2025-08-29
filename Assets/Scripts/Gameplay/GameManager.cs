@@ -14,6 +14,10 @@ namespace Scripts.Gameplay
         // 🔹 Global flag for safe cleanup
         public static bool IsQuittingOrRestarting = false;
 
+        void Start()
+        {
+            AudioManager.instance.PlayBGM();
+        }
         protected void Awake()
         {
             if (Instance == null)
