@@ -14,19 +14,33 @@ namespace Scripts.Gameplay
         // 🔹 Global flag for safe cleanup
         public static bool IsQuittingOrRestarting = false;
 
-        void Start()
+        // Override Start from InputHandlerBase to avoid CS0114 and preserve base logic
+        protected override void Start()
         {
-            AudioManager.instance.PlayBGM();
+            base.Start();
+
+            // Ensure only one BGM plays (and avoid NRE if AudioManager isn't present yet)
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlayBGM();
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] AudioManager.instance is null; cannot PlayBGM.");
+            }
         }
+
         protected void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
+                // If this should persist across scenes:
+                // DontDestroyOnLoad(gameObject);
             }
             else
             {
-                Debug.LogError($"GameMaster {Instance.name} already exists!  Deleting {this.name}");
+                Debug.LogError($"GameManager {Instance.name} already exists!  Deleting {this.name}");
                 Destroy(gameObject);
             }
         }

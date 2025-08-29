@@ -30,7 +30,7 @@ namespace Scripts.Gameplay
             }
             else
             {
-                Debug.LogWarning("[DestroyOnContact] Could not notify spawner: missing EnemyPathing/Spawner/Wave on parent.");
+                //Debug.LogWarning("[DestroyOnContact] Could not notify spawner: missing EnemyPathing/Spawner/Wave on parent.");
             }
 
             // Destroy ROOT enemy object (not just the child collider)
