@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class WinManager : MonoBehaviour
 {
@@ -6,7 +8,15 @@ public class WinManager : MonoBehaviour
     public EnemySpawner enemySpawner;
     public GameObject winScreenUI;
 
-    private bool winScreenShown = false;
+    [Header("Win Settings")]
+    public bool triggerWinScreen = true; // Option to trigger win screen
+    public float winScreenDelay = 0f;    // Delay before showing win screen
+
+    public bool loadNextLevelOnWin = false; // Option to load next scene
+    public string nextSceneName;            // Name of scene to load
+    public float nextSceneDelay = 0f;       // Delay before loading next scene
+
+    private bool winConditionHandled = false;
 
     void Start()
     {
@@ -22,7 +32,7 @@ public class WinManager : MonoBehaviour
 
     void Update()
     {
-        if (winScreenShown || enemySpawner == null) return;
+        if (winConditionHandled || enemySpawner == null) return;
 
         bool allWavesEnded = true;
         bool allEnemiesDestroyed = true;
@@ -35,17 +45,37 @@ public class WinManager : MonoBehaviour
 
         if (allWavesEnded && allEnemiesDestroyed)
         {
-            ShowWinScreen();
+            StartCoroutine(HandleWinCondition());
         }
     }
 
-    private void ShowWinScreen()
+    private IEnumerator HandleWinCondition()
     {
-        if (winScreenUI != null)
-            winScreenUI.SetActive(true);
+        winConditionHandled = true;
 
-        Time.timeScale = 0f;
-        winScreenShown = true;
-        Debug.Log("[WinManager] Win screen activated!");
+        // Delay before win screen
+        if (triggerWinScreen)
+        {
+            if (winScreenDelay > 0f)
+                yield return new WaitForSeconds(winScreenDelay);
+
+            if (winScreenUI != null)
+            {
+                winScreenUI.SetActive(true);
+                Time.timeScale = 0f; // Pause the game
+                Debug.Log("[WinManager] Win screen activated!");
+            }
+        }
+
+        // Delay before loading next scene
+        if (loadNextLevelOnWin && !string.IsNullOrEmpty(nextSceneName))
+        {
+            if (nextSceneDelay > 0f)
+                yield return new WaitForSecondsRealtime(nextSceneDelay);
+
+            Time.timeScale = 1f; // Resume time before switching scenes
+            Debug.Log($"[WinManager] Loading next level: {nextSceneName}");
+            SceneManager.LoadScene(nextSceneName);
+        }
     }
 }
