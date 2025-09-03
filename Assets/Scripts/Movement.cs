@@ -19,6 +19,8 @@ public class Movement : MonoBehaviour
     public float dashSpeed = 8f, dashLength = 0.5f, dashCooldown = 1f;
     private float dashCounter;
     private float dashCooldownCounter;
+    [SerializeField] private Animator animator;
+
 
     private Rigidbody2D theRB;
     private PlayerInvincibility invincibility;
@@ -45,6 +47,23 @@ public class Movement : MonoBehaviour
         // Movement input
         moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
         activeMoveSpeed = moveSpeed;
+
+        // Handle left/right movement animations
+        if (moveInput.x < 0) // moving left (A key, D-pad left, stick left)
+        {
+            animator.SetBool("isMovingLeft", true);
+            animator.SetBool("isMovingRight", false);
+        }
+        else if (moveInput.x > 0) // moving right (D key, D-pad right, stick right)
+        {
+            animator.SetBool("isMovingLeft", false);
+            animator.SetBool("isMovingRight", true);
+        }
+        else // idle on X-axis
+        {
+            animator.SetBool("isMovingLeft", false);
+            animator.SetBool("isMovingRight", false);
+        }
 
         // Handle dash input
         if (Input.GetKeyDown(KeyCode.Space) && dashCooldownCounter <= 0 && dashCounter <= 0)
