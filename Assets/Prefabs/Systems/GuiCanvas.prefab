@@ -2928,7 +2928,7 @@ GameObject:
   - component: {fileID: 4775763776963949028}
   - component: {fileID: 4775763776963949027}
   - component: {fileID: 4775763776963949026}
-  - component: {fileID: 4775763776963949025}
+  - component: {fileID: 1453983191}
   m_Layer: 5
   m_Name: ButtonRestart
   m_TagString: Untagged
@@ -3039,9 +3039,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4775763776963949025}
-        m_TargetAssemblyTypeName: Scripts.Helpers.HelpersOnMonoBehaviour, Assembly-CSharp
-        m_MethodName: ReloadScene
+      - m_Target: {fileID: 1453983191}
+        m_TargetAssemblyTypeName: Scripts.UI.SelectionManager, Assembly-CSharp
+        m_MethodName: RestartLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3051,7 +3051,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4775763776963949025
+--- !u!114 &1453983191
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3060,9 +3060,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4775763776963948959}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb4a86988f994e3da235d2779ce33e57, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ccaad106e5ea8740a6e64b39bd5e239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainMenuSceneName: MainMenu
 --- !u!1 &4775763777002768178
 GameObject:
   m_ObjectHideFlags: 0
@@ -7267,7 +7268,7 @@ GameObject:
   - component: {fileID: 4775763778337750490}
   - component: {fileID: 4775763778337750489}
   - component: {fileID: 4775763778337750488}
-  - component: {fileID: 4775763778337750487}
+  - component: {fileID: 898952023}
   m_Layer: 5
   m_Name: ButtonQuit
   m_TagString: Untagged
@@ -7378,9 +7379,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4775763778337750487}
-        m_TargetAssemblyTypeName: Scripts.Helpers.HelpersOnMonoBehaviour, Assembly-CSharp
-        m_MethodName: QuitApplication
+      - m_Target: {fileID: 898952023}
+        m_TargetAssemblyTypeName: Scripts.UI.SelectionManager, Assembly-CSharp
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7390,7 +7391,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4775763778337750487
+--- !u!114 &898952023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7399,9 +7400,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4775763778337750485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb4a86988f994e3da235d2779ce33e57, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ccaad106e5ea8740a6e64b39bd5e239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainMenuSceneName: MainMenu
 --- !u!1 &4775763778373485378
 GameObject:
   m_ObjectHideFlags: 0
