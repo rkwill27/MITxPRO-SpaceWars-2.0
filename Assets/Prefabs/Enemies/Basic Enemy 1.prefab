@@ -69,7 +69,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 6115614045583681578, guid: bd8545cd1ca55634088f72a59b12a136, type: 3}
-  firePoint: {fileID: 8956839656840082998}
+  firePoints:
+  - {fileID: 8956839656840082998}
   fireRate: 1.5
   projectileSpeed: 5
 --- !u!114 &8254114458555999790
@@ -101,9 +102,6 @@ MonoBehaviour:
     WaveEnded: 0
     AllEnemiesDestroyed: 0
     spawnedEnemies: []
-  bulletPrefab: {fileID: 0}
-  firePoint: {fileID: 8956839656840082998}
-  fireRate: 1.5
 --- !u!1 &2519725713663993314
 GameObject:
   m_ObjectHideFlags: 0

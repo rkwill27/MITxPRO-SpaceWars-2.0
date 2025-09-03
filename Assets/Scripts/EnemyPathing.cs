@@ -19,16 +19,16 @@ public class EnemyPathing : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private bool isWaiting = false;
 
-    [Header("Firing Settings")]
+    /* [Header("Firing Settings")]
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float fireRate = 1.5f;
-    private float fireCooldown = 0f;
+    private float fireCooldown = 0f; */
 
     private void Update()
     {
         HandleMovement();
-        HandleFiring();
+        //HandleFiring();
     }
 
     private void HandleMovement()
@@ -65,7 +65,7 @@ public class EnemyPathing : MonoBehaviour
         isWaiting = false;
     }
 
-    private void HandleFiring()
+    /* private void HandleFiring()
     {
         if (bulletPrefab == null || firePoint == null) return;
 
@@ -75,7 +75,7 @@ public class EnemyPathing : MonoBehaviour
             Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             fireCooldown = fireRate;
         }
-    }
+    } */
 
     public void Initialize(
         Transform[] patrolPoints,
