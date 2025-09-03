@@ -86,6 +86,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawner: {fileID: 0}
   wave:
+    WaveName: Wave
     startTime: 0
     quantity: 3
     spawnDelay: 0.5
@@ -100,18 +101,9 @@ MonoBehaviour:
     WaveEnded: 0
     AllEnemiesDestroyed: 0
     spawnedEnemies: []
-  patrolPoints: []
-  randomizeAfterFirst: 0
-  moveSpeed: 3
-  waitTimeAtPoints: 0.5
-  smoothTime: 0.2
-  projectilePrefab: {fileID: 6115614045583681578, guid: bd8545cd1ca55634088f72a59b12a136, type: 3}
+  bulletPrefab: {fileID: 0}
   firePoint: {fileID: 8956839656840082998}
-  fireInterval: 2
-  shouldDropItem: 0
-  itemsToDrop:
-  - itemPrefab: {fileID: 0}
-    dropChancePercent: 100
+  fireRate: 1.5
 --- !u!1 &2519725713663993314
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,22 +216,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 131072
   scoreValue: 10
-  spawner: {fileID: 0}
-  wave:
-    startTime: 0
-    quantity: 3
-    spawnDelay: 0.5
-    wavePrefabs: []
-    spawnPoints: []
-    patrolPoints: []
-    randomizePatrolPoints: 0
-    randomizeAfterFirst: 0
-    moveSpeed: 3
-    waitTimeAtPoints: 1
-    smoothTime: 0.2
-    WaveEnded: 0
-    AllEnemiesDestroyed: 0
-    spawnedEnemies: []
 --- !u!114 &3253129101229091836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,7 +229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shouldDropItem: 1
-  dropChancePercent: 50
+  dropChancePercent: 75
   itemToDrop: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
 --- !u!1 &7933527746526124038
 GameObject:
