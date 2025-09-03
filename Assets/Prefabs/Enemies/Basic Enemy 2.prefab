@@ -240,8 +240,8 @@ MonoBehaviour:
   - {fileID: 3677928894728978623}
   - {fileID: 1833247717012674484}
   - {fileID: 1833247716496603858}
-  fireRate: 1.5
-  projectileSpeed: 5
+  fireRate: 2.5
+  projectileSpeed: 3
 --- !u!114 &4452713952660918439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shouldDropItem: 1
-  dropChancePercent: 75
+  dropChancePercent: 50
   itemToDrop: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
 --- !u!1 &7903935878697767787
 GameObject:

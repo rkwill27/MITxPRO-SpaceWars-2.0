@@ -450,6 +450,7 @@ MonoBehaviour:
   dashSpeed: 6
   dashLength: 2
   dashCooldown: 5
+  animator: {fileID: 1776343111813909138}
   dashCooldownImage: {fileID: 0}
 --- !u!114 &1572967945418865146
 MonoBehaviour:
