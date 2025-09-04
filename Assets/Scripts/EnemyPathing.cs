@@ -19,11 +19,22 @@ public class EnemyPathing : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private bool isWaiting = false;
 
+    [Header("Lifetime")]
+    [Tooltip("If > 0, despawn (Destroy root) after this many seconds.")]
+    public float lifetimeSeconds = 0f;
+
     /* [Header("Firing Settings")]
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float fireRate = 1.5f;
     private float fireCooldown = 0f; */
+
+    private void OnEnable()
+    {
+        // Despawn after a lifetime, if set. Destroy the ROOT so spawner.RemoveEnemy runs.
+        if (lifetimeSeconds > 0f)
+            Destroy(transform.root.gameObject, lifetimeSeconds);
+    }
 
     private void Update()
     {

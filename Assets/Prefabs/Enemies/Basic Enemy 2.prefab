@@ -240,7 +240,7 @@ MonoBehaviour:
   - {fileID: 3677928894728978623}
   - {fileID: 1833247717012674484}
   - {fileID: 1833247716496603858}
-  fireRate: 2.5
+  fireRate: 4
   projectileSpeed: 3
 --- !u!114 &4452713952660918439
 MonoBehaviour:
@@ -271,6 +271,8 @@ MonoBehaviour:
     WaveEnded: 0
     AllEnemiesDestroyed: 0
     spawnedEnemies: []
+  arrivalThreshold: 0.1
+  lifetimeSeconds: 30
 --- !u!1 &7092658359304217538
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,7 +354,7 @@ MonoBehaviour:
   thingsThatKillMe:
     serializedVersion: 2
     m_Bits: 131072
-  scoreValue: 10
+  scoreValue: 20
 --- !u!1 &7903935878697767787
 GameObject:
   m_ObjectHideFlags: 0

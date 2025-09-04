@@ -2168,6 +2168,10 @@ MonoBehaviour:
     wavePrefabs:
     - prefab: {fileID: 5424770212084047334, guid: 60bb596ccf7bdcf42bb694721fc61a04, type: 3}
       frequency: 100
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     spawnPoints:
     - {fileID: 2296202823661903886}
     patrolPoints:
@@ -2189,6 +2193,10 @@ MonoBehaviour:
     wavePrefabs:
     - prefab: {fileID: 5424770212084047334, guid: 60bb596ccf7bdcf42bb694721fc61a04, type: 3}
       frequency: 100
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     spawnPoints:
     - {fileID: 2296202822728357449}
     patrolPoints:
@@ -2210,8 +2218,20 @@ MonoBehaviour:
     wavePrefabs:
     - prefab: {fileID: 292471353829829487, guid: b0a2108968a2d234790740adca0910f5, type: 3}
       frequency: 75
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     - prefab: {fileID: 5424770212084047334, guid: 60bb596ccf7bdcf42bb694721fc61a04, type: 3}
       frequency: 25
+      dropItems: []
+      noDropWeight: 0
+    - prefab: {fileID: 5424770212084047334, guid: 60bb596ccf7bdcf42bb694721fc61a04, type: 3}
+      frequency: 25
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     spawnPoints:
     - {fileID: 2296202822894602597}
     patrolPoints:
@@ -2238,8 +2258,16 @@ MonoBehaviour:
     wavePrefabs:
     - prefab: {fileID: 292471353829829487, guid: b0a2108968a2d234790740adca0910f5, type: 3}
       frequency: 50
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     - prefab: {fileID: 5424770212084047334, guid: 60bb596ccf7bdcf42bb694721fc61a04, type: 3}
       frequency: 50
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     spawnPoints:
     - {fileID: 1736768400}
     patrolPoints:
@@ -2265,8 +2293,16 @@ MonoBehaviour:
     wavePrefabs:
     - prefab: {fileID: 292471353829829487, guid: b0a2108968a2d234790740adca0910f5, type: 3}
       frequency: 50
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     - prefab: {fileID: 5424770212084047334, guid: 60bb596ccf7bdcf42bb694721fc61a04, type: 3}
       frequency: 50
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     spawnPoints:
     - {fileID: 1950547619}
     patrolPoints:
@@ -2289,8 +2325,14 @@ MonoBehaviour:
     wavePrefabs:
     - prefab: {fileID: 292471353829829487, guid: b0a2108968a2d234790740adca0910f5, type: 3}
       frequency: 50
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     - prefab: {fileID: 5424770212084047334, guid: 60bb596ccf7bdcf42bb694721fc61a04, type: 3}
       frequency: 50
+      dropItems: []
+      noDropWeight: 0
     spawnPoints:
     - {fileID: 1736768400}
     patrolPoints:
@@ -2313,8 +2355,16 @@ MonoBehaviour:
     wavePrefabs:
     - prefab: {fileID: 292471353829829487, guid: b0a2108968a2d234790740adca0910f5, type: 3}
       frequency: 25
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     - prefab: {fileID: 5424770212084047334, guid: 60bb596ccf7bdcf42bb694721fc61a04, type: 3}
       frequency: 75
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     spawnPoints:
     - {fileID: 1950547619}
     - {fileID: 1736768400}
@@ -2339,8 +2389,16 @@ MonoBehaviour:
     wavePrefabs:
     - prefab: {fileID: 292471353829829487, guid: b0a2108968a2d234790740adca0910f5, type: 3}
       frequency: 80
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     - prefab: {fileID: 5424770212084047334, guid: 60bb596ccf7bdcf42bb694721fc61a04, type: 3}
       frequency: 20
+      dropItems:
+      - prefab: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
+        frequency: 50
+      noDropWeight: 100
     spawnPoints:
     - {fileID: 2296202823661903886}
     - {fileID: 2296202822894602597}

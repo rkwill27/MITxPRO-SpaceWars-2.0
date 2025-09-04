@@ -71,7 +71,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6115614045583681578, guid: bd8545cd1ca55634088f72a59b12a136, type: 3}
   firePoints:
   - {fileID: 8956839656840082998}
-  fireRate: 1.5
+  fireRate: 3
   projectileSpeed: 5
 --- !u!114 &8254114458555999790
 MonoBehaviour:
@@ -102,6 +102,8 @@ MonoBehaviour:
     WaveEnded: 0
     AllEnemiesDestroyed: 0
     spawnedEnemies: []
+  arrivalThreshold: 0.1
+  lifetimeSeconds: 30
 --- !u!1 &2519725713663993314
 GameObject:
   m_ObjectHideFlags: 0
