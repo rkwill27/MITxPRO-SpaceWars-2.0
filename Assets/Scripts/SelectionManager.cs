@@ -1,5 +1,5 @@
 using System.Collections;
-using Scripts.Gameplay;
+using Scripts.Gameplay;            // HealthPickup
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,90 +12,64 @@ namespace Scripts.UI
 
         private static bool _isTransitioning = false;
 
-        public void GoToMainMenu()
-        {
-            if (_isTransitioning) return;
-            _isTransitioning = true;
-            if (Time.timeScale != 1f) Time.timeScale = 1f;
-            TrySetQuittingOrRestarting();
-
-            // CHANGED: use the serialized field, not the hard-coded string
-            StartCoroutine(LoadSceneClean(mainMenuSceneName));
-        }
-
-        // NEW: call this from your death screen “Restart” button
         public void RestartLevel()
         {
             if (_isTransitioning) return;
             _isTransitioning = true;
             if (Time.timeScale != 1f) Time.timeScale = 1f;
-            TrySetQuittingOrRestarting();
-            var current = SceneManager.GetActiveScene().name;
-            StartCoroutine(LoadSceneClean(current));
+
+            // Pause spawning before any destruction/unload begins
+            HealthPickup.PauseSpawning();
+            StartCoroutine(LoadSceneClean(SceneManager.GetActiveScene().name));
+        }
+
+        public void GoToMainMenu()
+        {
+            if (_isTransitioning) return;
+            _isTransitioning = true;
+            if (Time.timeScale != 1f) Time.timeScale = 1f;
+
+            HealthPickup.PauseSpawning();
+            StartCoroutine(LoadSceneClean(mainMenuSceneName));
         }
 
         private IEnumerator LoadSceneClean(string sceneName)
         {
-            // NEW: validate the scene is in Build Settings before doing cleanup
-            if (!CanLoadSceneByName(sceneName))
-            {
-                Debug.LogError("SelectionManager: Scene '" + sceneName + "' is not in Build Settings. " +
-                               "Open File -> Build Settings and add it to 'Scenes In Build'.");
-                _isTransitioning = false;
-                yield break;
-            }
-
-            // 1) Proactively destroy any existing HealthPickup instances
-            var pickups = FindObjectsOfType<HealthPickup>(includeInactive: true);
-            for (int i = 0; i < pickups.Length; i++)
-            {
-                if (pickups[i] != null)
-                    Destroy(pickups[i].gameObject);
-            }
-
-            // 2) Give Unity a frame to process destroys
-            yield return null;
-
-            // 3) Optional: free unused references
+            // Clear any lingering pickups now
+            HealthPickup.DestroyAllExisting();
+            yield return null; // allow Destroy() to process
             yield return Resources.UnloadUnusedAssets();
 
-            // 4) Load the scene
+            // OPTIONAL belt-and-suspenders: ensure spawning is re-enabled
+            // as soon as the next scene has fully loaded.
+            SceneManager.sceneLoaded += OnSceneLoadedResume;
+
+            // Load the next scene (HealthPickup also resumes via its static listener)
             SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
-            _isTransitioning = false; // reset for next time
+
+            _isTransitioning = false;
         }
 
-        private static void TrySetQuittingOrRestarting()
+        // One-shot resume handler; unsubscribes itself after firing once.
+        private void OnSceneLoadedResume(Scene s, LoadSceneMode m)
         {
-            try { GameManager.IsQuittingOrRestarting = true; } catch { }
-        }
-
-        public static void GoToMainMenuStatic(string sceneName = "MainMenu")
-        {
-            if (Time.timeScale != 1f) Time.timeScale = 1f;
-            TrySetQuittingOrRestarting();
-
-            var pickups = Object.FindObjectsOfType<HealthPickup>(includeInactive: true);
-            for (int i = 0; i < pickups.Length; i++)
-                if (pickups[i] != null) Object.Destroy(pickups[i].gameObject);
-
-            SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+            HealthPickup.ResumeSpawning();
+            SceneManager.sceneLoaded -= OnSceneLoadedResume;
         }
 
         public void QuitGame()
         {
             if (Time.timeScale != 1f) Time.timeScale = 1f;
-            TrySetQuittingOrRestarting();
+
+            // Block any new drops and clean up existing pickups before quitting
+            HealthPickup.PauseSpawning(quitting: true);
+            HealthPickup.DestroyAllExisting();
+
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
-        }
-
-        // NEW: build-settings guard that works in player builds
-        private static bool CanLoadSceneByName(string sceneName)
-        {
-            return Application.CanStreamedLevelBeLoaded(sceneName);
         }
     }
 }

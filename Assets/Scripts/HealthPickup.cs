@@ -9,56 +9,71 @@ namespace Scripts.Gameplay
         public int healAmount = 1;
         public AudioClip pickupSound;
 
-        private static bool isQuitting = false;
-        private static bool isSceneUnloading = false;
+        [Header("Lifetime")]
+        [Tooltip("If > 0, the pickup will auto-despawn after this many seconds.")]
+        public float lifetimeSeconds = 0f;
 
-        private void OnEnable()
+        // --- Global guards ---
+        private static bool isQuitting, isSceneUnloading, isManuallyPaused;
+
+        // Hook global events ONCE, even if no pickups exist in the scene
+        static HealthPickup()
         {
-            Application.quitting += HandleQuitting;
-            SceneManager.sceneUnloaded += HandleSceneUnloaded;
-            SceneManager.sceneLoaded += HandleSceneLoaded;   // NEW
+            Application.quitting += () => isQuitting = true;
+            SceneManager.sceneUnloaded += _ => isSceneUnloading = true;
+            SceneManager.sceneLoaded += (_, __) => ResumeSpawning();  // <-- auto-reactivate after any load
         }
 
-        private void OnDisable()
+        public static bool CanSpawnPickups => !(isQuitting || isSceneUnloading || isManuallyPaused);
+
+        public static void PauseSpawning(bool quitting = false)
         {
-            // IMPORTANT: unsubscribe to avoid keeping this instance alive across unloads
-            Application.quitting -= HandleQuitting;
-            SceneManager.sceneUnloaded -= HandleSceneUnloaded;
-            SceneManager.sceneLoaded -= HandleSceneLoaded;    // NEW
+            isManuallyPaused = true;
+            isSceneUnloading = true;
+            if (quitting) isQuitting = true;
         }
 
-        private void OnDestroy()
+        public static void ResumeSpawning()
         {
-            // Do NOT spawn anything here.
+            isManuallyPaused = false;
+            isSceneUnloading = false;
+            isQuitting = false;
+        }
+
+        public static int DestroyAllExisting()
+        {
+            var pickups = FindObjectsOfType<HealthPickup>(includeInactive: true);
+            for (int i = 0; i < pickups.Length; i++)
+                if (pickups[i]) Destroy(pickups[i].gameObject);
+            return pickups.Length;
+        }
+
+        public static GameObject TrySpawn(GameObject prefab, Vector3 pos, Quaternion rot, Transform parent = null)
+        {
+            if (!CanSpawnPickups || !prefab) return null;
+            return Instantiate(prefab, pos, rot, parent);
+        }
+
+        private void Awake()
+        {
+            // If something slipped in during shutdown, remove it immediately
+            if (!CanSpawnPickups) { Destroy(gameObject); return; }
+
+            if (lifetimeSeconds > 0f)
+                Destroy(gameObject, lifetimeSeconds);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (isQuitting || isSceneUnloading) return;
+            if (!CanSpawnPickups) return;
 
-            var playerHealth = other.GetComponent<HitPoints>();
-            if (playerHealth != null && playerHealth.IsAlive)
+            var hp = other.GetComponent<HitPoints>();
+            if (hp != null && hp.IsAlive)
             {
-                playerHealth.HealPlayer(healAmount);
-
-                // Avoid PlayClipAtPoint; use a persistent AudioManager instead
-                if (pickupSound != null && AudioManager.instance != null)
-                {
-                    // AudioManager.instance.PlaySFXOneShot(pickupSound);
-                }
-
+                hp.HealPlayer(healAmount);
+                // if (pickupSound && AudioManager.instance) AudioManager.instance.PlaySFXOneShot(pickupSound);
                 Destroy(gameObject);
             }
-        }
-
-        private void HandleQuitting() => isQuitting = true;
-        private void HandleSceneUnloaded(Scene _) => isSceneUnloading = true;
-
-        // NEW: reset scene-unloading guard after the next scene is ready
-        private void HandleSceneLoaded(Scene _, LoadSceneMode __)
-        {
-            isSceneUnloading = false;
-            isQuitting = false; // safe to clear; we're in a fresh scene
         }
     }
 }

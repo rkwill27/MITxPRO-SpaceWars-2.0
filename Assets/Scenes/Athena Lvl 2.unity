@@ -2332,7 +2332,7 @@ MonoBehaviour:
     WaveEnded: 0
     AllEnemiesDestroyed: 0
     spawnedEnemies: []
-  - WaveName: Wave 7
+  - WaveName: Wave 8
     startTime: 100
     quantity: 20
     spawnDelay: 3

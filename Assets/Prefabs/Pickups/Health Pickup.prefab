@@ -64,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healAmount: 1
   pickupSound: {fileID: 0}
+  lifetimeSeconds: 5
 --- !u!212 &7488479922918265224
 SpriteRenderer:
   m_ObjectHideFlags: 0

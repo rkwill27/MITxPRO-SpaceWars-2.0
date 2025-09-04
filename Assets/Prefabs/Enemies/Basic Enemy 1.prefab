@@ -144,7 +144,6 @@ GameObject:
   - component: {fileID: 6291279485957521357}
   - component: {fileID: 3539578359544842106}
   - component: {fileID: 1876564629467352826}
-  - component: {fileID: 3253129101229091836}
   m_Layer: 16
   m_Name: 'PathingUFO '
   m_TagString: Untagged
@@ -194,10 +193,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.25}
-      - {x: -0.5, y: 0}
-      - {x: 0, y: -0.25}
-      - {x: 0.5, y: 0}
+    - - {x: 0.010197677, y: 0.67320365}
+      - {x: -0.88751173, y: 0.08668027}
+      - {x: -0.010197677, y: -0.5559304}
+      - {x: 0.8773141, y: 0.07138375}
 --- !u!114 &1876564629467352826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,21 +213,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 131072
   scoreValue: 10
---- !u!114 &3253129101229091836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3254301336009348427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd87d8950bbc752459da8c616562258c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shouldDropItem: 1
-  dropChancePercent: 50
-  itemToDrop: {fileID: 6698348445348745803, guid: e1b8d91201cba2246bef11d46eba88c4, type: 3}
 --- !u!1 &7933527746526124038
 GameObject:
   m_ObjectHideFlags: 0

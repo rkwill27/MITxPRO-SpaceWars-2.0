@@ -431,7 +431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78bb836c139cc7d4f926d88d5d4976ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invincibilityTime: 1
+  invincibilityTime: 2
   blinkInterval: 0.1
   enforceVisibilityGuard: 1
 --- !u!114 &1572967945418865149
